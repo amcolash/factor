@@ -31,7 +31,7 @@ const lightColor = 'bg-slate-800';
 function getColors(icon?: Icon): { background: string; fill?: string } {
   if (!icon) return { background: darkColor, fill: lightColor };
 
-  const dark = icon ? isDarkColor('#' + icon.hex) : false;
+  // const dark = icon ? isDarkColor('#' + icon.hex) : false;
   // let background = dark ? darkColor : lightColor;
   let background = darkColor;
   let fill = '#' + icon.hex;
