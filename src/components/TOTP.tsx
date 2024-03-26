@@ -9,7 +9,7 @@ import { EditKey } from './EditKey';
 import { FaEdit, FaPlus } from 'react-icons/fa';
 import { useTailwind } from '../hooks/useTailwind';
 
-export function TOTOP({ userData, userRef }: { userData: UserData; userRef: DocumentReference }) {
+export function TOTP({ userData, userRef }: { userData: UserData; userRef: DocumentReference }) {
   const { time, timestamp } = useRefreshTimer();
 
   const [search, setSearch] = useState('');
@@ -26,18 +26,13 @@ export function TOTOP({ userData, userRef }: { userData: UserData; userRef: Docu
       <>
         {userData.keys.length === 0 && <div className="text-center text-lg bg-slate-800 p-8 w-full rounded-md">No keys added yet</div>}
         {userData.keys.length > 0 && (
-          <>
-            <div className="flex gap-4 w-full mb-6">
-              <input type="search" value={search} placeholder="Search tokens" onChange={(e) => setSearch(e.target.value)} />
-              <button onClick={() => setEditMode(!editMode)} className={'icon' + (editMode ? ' !brightness-75' : '')}>
-                <FaEdit />
-              </button>
-            </div>
-            <div className="w-full max-w-screen-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="w-full max-w-screen-lg">
+            <input className="mb-6" type="search" value={search} placeholder="Search tokens" onChange={(e) => setSearch(e.target.value)} />
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
               {userData.keys
                 .filter((k) => search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase()))
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .map((key: Key) => {
+                .map((key: Key, i: number) => {
                   try {
                     return (
                       <TokenCard
@@ -49,7 +44,9 @@ export function TOTOP({ userData, userRef }: { userData: UserData; userRef: Docu
                           setEditKey(true);
                           setKeyToEdit(key);
                         }}
+                        setEditMode={setEditMode}
                         editMode={editMode}
+                        index={i}
                       />
                     );
                   } catch (err) {
@@ -58,7 +55,7 @@ export function TOTOP({ userData, userRef }: { userData: UserData; userRef: Docu
                   }
                 })}
             </div>
-          </>
+          </div>
         )}
       </>
     ),
@@ -68,15 +65,11 @@ export function TOTOP({ userData, userRef }: { userData: UserData; userRef: Docu
   return (
     <>
       <div
-        className="absolute bottom-0 left-0 h-1.5 bg-primary transition-all duration-700"
-        style={{ width: `${(remainingSeconds / 30) * 100}%` }}
+        className="absolute bottom-0 left-0 h-1.5 bg-primary transition-transform duration-700 w-screen"
+        style={{ transform: `scaleX(${(remainingSeconds / 30) * 100}%)` }}
       ></div>
 
-      <button onClick={() => setEditKey(true)} className="icon absolute bottom-6 right-6 rounded-full !p-4">
-        <FaPlus />
-      </button>
-
-      <div className="flex flex-col gap-4 m-4 items-center">
+      <div className="flex justify-center w-full absolute bottom-2 left-0 right-0">
         <div className="w-16 h-16 p-1 mb-6">
           <CircularProgressbar
             value={remainingSeconds}
@@ -91,9 +84,19 @@ export function TOTOP({ userData, userRef }: { userData: UserData; userRef: Docu
             strokeWidth={10}
           />
         </div>
-
-        {tokens}
       </div>
+
+      <button
+        onClick={() => {
+          if (editMode) setEditMode(false);
+          else setEditKey(true);
+        }}
+        className={'icon absolute bottom-6 right-6 rounded-full !p-4 transition-transform' + (editMode ? ' rotate-45' : '')}
+      >
+        <FaPlus />
+      </button>
+
+      <div className="flex flex-col gap-4 m-4 items-center">{tokens}</div>
 
       {editKey && (
         <div

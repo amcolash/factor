@@ -1,18 +1,17 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Login } from './Login';
-import { TOTOP } from './TOTOP';
+import { TOTP } from './TOTP';
 import { auth } from '../util/firebase';
 import { useUserData } from '../hooks/useUserData';
 import { Lock } from './Lock';
 import { useEffect, useMemo, useState } from 'react';
-import { FaEdit, FaKey, FaLock } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 import { setDoc, updateDoc } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { encrypt } from '@metamask/browser-passworder';
 import { CodeContext } from '../contexts/CodeContext';
-
-// TODO: encryption at rest?, autolock on tab switch / window loses focus
+import useLongPress from '../hooks/useLongPress';
 
 export function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -30,6 +29,13 @@ async function promptCode(token?: string): Promise<string | undefined> {
   while (code.length !== 6 && tries < 3) {
     code = prompt('Enter 6 digit pin') || '';
     tries++;
+  }
+  if (code.length === 6) {
+    const newCode = prompt('Re-enter 6 digit pin') || '';
+    if (newCode !== code) {
+      toast.error('Codes do not match', { autoClose: 5000 });
+      return;
+    }
   }
 
   if (code.length === 6) {
@@ -49,6 +55,12 @@ async function promptCode(token?: string): Promise<string | undefined> {
 function Authorized({ user }: { user: User }) {
   const { value, loading, error, userRef } = useUserData();
   const [token, setToken] = useState<string>();
+  const longPressEvent = useLongPress(async () => {
+    const code = await promptCode(token);
+
+    if (code) updateDoc(userRef, { code });
+    else toast.error('Failed to update code');
+  }, 1000);
 
   useEffect(() => {
     const listener = () => {
@@ -72,24 +84,13 @@ function Authorized({ user }: { user: User }) {
 
   const buttons = useMemo(
     () => (
-      <div className="absolute top-4 right-4 flex gap-4">
-        <button
-          className="icon"
-          onClick={async () => {
-            const code = await promptCode(token);
-
-            if (code) updateDoc(userRef, { code });
-            else toast.error('Failed to update code');
-          }}
-        >
-          <FaKey />
-        </button>
-        <button onClick={() => setToken(undefined)} className="icon">
+      <div className="absolute bottom-24 right-[30px]">
+        <button onClick={() => setToken(undefined)} className="p-2.5 rounded-full" {...longPressEvent}>
           <FaLock />
         </button>
       </div>
     ),
-    [token]
+    [longPressEvent]
   );
 
   if (loading) return <p>Loading...</p>;
@@ -101,7 +102,7 @@ function Authorized({ user }: { user: User }) {
   return (
     <CodeContext.Provider value={token}>
       {buttons}
-      <TOTOP userData={value.data()!} userRef={userRef} />
+      <TOTP userData={value.data()!} userRef={userRef} />
     </CodeContext.Provider>
   );
 }

@@ -2,29 +2,35 @@ import { DocumentReference, arrayRemove, updateDoc } from 'firebase/firestore';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { TOTP } from 'totp-generator';
-import { FaEdit, FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import { Key } from '../hooks/useUserData';
 
 import { AppIcon } from './AppIcon';
 import { CodeContext } from '../contexts/CodeContext';
 import { useContext, useEffect, useState } from 'react';
 import { decrypt } from '@metamask/browser-passworder';
+import useLongPress from '../hooks/useLongPress';
 
 export function TokenCard({
   data,
   userRef,
   timestamp,
   onEdit,
+  setEditMode,
   editMode,
+  index,
 }: {
   data: Key;
   userRef: DocumentReference;
   timestamp: Date;
   onEdit: () => void;
+  setEditMode: (value: boolean) => void;
   editMode: boolean;
+  index: number;
 }) {
   const encryptionToken = useContext(CodeContext) || '';
   const [secret, setSecret] = useState('');
+  const longPressEvent = useLongPress(async () => setEditMode(!editMode), 600);
 
   useEffect(() => {
     decrypt(encryptionToken, data.secret).then((decrypted) => setSecret((decrypted as { secret: string }).secret));
@@ -34,10 +40,15 @@ export function TokenCard({
 
   const innerContents = (
     <div
-      className="p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[97%] relative cursor-pointer"
+      className={
+        'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[97%] relative cursor-pointer' +
+        (editMode ? ' animate-wiggle' : '')
+      }
+      style={{ animationDelay: `${index * 100}ms` }}
       onClick={(e) => {
         if (editMode) onEdit();
       }}
+      {...longPressEvent}
     >
       <div className="flex gap-4">
         <AppIcon name={data.name} />

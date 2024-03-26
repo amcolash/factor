@@ -9,6 +9,15 @@ export default {
         secondary: '#051524',
         danger: '#f07f7b',
       },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-0.5deg)' },
+          '50%': { transform: 'rotate(0.5deg)' },
+        },
+      },
+      animation: {
+        wiggle: 'wiggle 400ms ease-in-out infinite',
+      },
     },
   },
   plugins: [],
