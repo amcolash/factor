@@ -20,8 +20,7 @@ const manifest: Partial<ManifestOptions> = {
   theme_color: '#4b787d',
   background_color: '#051524',
   display: 'standalone',
-  scope: '/',
-  start_url: '/',
+  start_url: '/factor/',
   id: 'com.amcolash.factor',
   name: 'Factor',
   short_name: 'Factor',
@@ -51,6 +50,7 @@ const manifest: Partial<ManifestOptions> = {
 };
 
 export default defineConfig({
+  base: '/factor/',
   build: {
     rollupOptions: {
       output: {
