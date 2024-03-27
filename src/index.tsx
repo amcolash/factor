@@ -4,6 +4,7 @@ import { ToastContainer, Zoom } from 'react-toastify';
 import { Buffer } from 'buffer';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerSW } from 'virtual:pwa-register';
+import { useIsMobile } from './hooks/useIsMobile';
 
 // Fixes for browser-passworder
 window.global ||= window;
@@ -25,9 +26,23 @@ if (!isBrowser) {
   window.resizeTo(500, 760);
 }
 
-createRoot(document.getElementById('root')!).render(
-  <>
-    <App />
-    <ToastContainer theme="dark" position="bottom-center" transition={Zoom} autoClose={1000} hideProgressBar closeButton={false} />
-  </>
-);
+function Container() {
+  const isMobile = useIsMobile();
+
+  return (
+    <>
+      <App />
+      <ToastContainer
+        theme="dark"
+        position="bottom-center"
+        bodyClassName={isMobile ? 'text-right' : ''}
+        transition={Zoom}
+        autoClose={1000}
+        hideProgressBar
+        closeButton={false}
+      />
+    </>
+  );
+}
+
+createRoot(document.getElementById('root')!).render(<Container />);
