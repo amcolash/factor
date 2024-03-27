@@ -1,4 +1,8 @@
-# Nano React App Default Typescript Template
+# Factor
+
+2FA App to replace Authy after they announced that the desktop app will be discontinued. Data securely stored on firebase, hosted on github pages.
+
+## Nano React App Default Typescript Template
 
 The default template project for [nano-react-app](https://github.com/nano-react-app/nano-react-app).
 
@@ -31,7 +35,7 @@ vite --port 1234
 You can use CSS files with simple ES2015 `import` statements anywhere in your Javascript:
 
 ```js
-import "./index.css";
+import './index.css';
 ```
 
 ## Babel transforms
@@ -39,7 +43,6 @@ import "./index.css";
 The Babel preset [babel-preset-nano-react-app](https://github.com/nano-react-app/babel-preset-nano-react-app) is used to support the same transforms that Create React App supports.
 
 The Babel configuration lives inside `package.json` and will override an external `.babelrc` file, so if you want to use `.babelrc` remember to delete the `babel` property inside `package.json`.
-
 
 ## Deploy to GitHub Pages
 
