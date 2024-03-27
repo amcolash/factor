@@ -78,11 +78,11 @@ export function TOTP({ userData, userRef }: { userData: UserData; userRef: Docum
   return (
     <>
       <div
-        className="absolute bottom-0 left-0 h-1.5 bg-primary transition-transform duration-700 w-screen"
+        className="fixed bottom-0 left-0 h-1.5 bg-primary transition-transform duration-700 w-screen"
         style={{ transform: `scaleX(${(remainingSeconds / 30) * 100}%)` }}
       ></div>
 
-      <div className="flex justify-center w-full absolute bottom-2 left-0 right-0">
+      <div className="flex justify-center w-full fixed bottom-2 left-0 right-0">
         <div className="w-16 h-16 p-1 mb-6">
           <CircularProgressbar
             value={remainingSeconds}
@@ -104,12 +104,12 @@ export function TOTP({ userData, userRef }: { userData: UserData; userRef: Docum
           if (editMode) setEditMode(false);
           else setEditKey(true);
         }}
-        className={'icon absolute bottom-6 right-6 rounded-full !p-4 transition-transform' + (editMode ? ' rotate-45' : '')}
+        className={'icon fixed bottom-6 right-6 rounded-full !p-4 transition-transform' + (editMode ? ' rotate-45' : '')}
       >
         <FaPlus />
       </button>
 
-      <div className="flex flex-col gap-4 m-4 items-center">{tokens}</div>
+      <div className="flex flex-col gap-4 m-6 sm:m-8 items-center">{tokens}</div>
 
       {editKey && (
         <div

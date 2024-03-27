@@ -26,7 +26,7 @@ function getIcon(name?: string): Icon | undefined {
   return icon ? icon[1] : undefined;
 }
 
-const darkColor = 'bg-slate-800';
+const darkColor = 'bg-slate-900';
 const lightColor = 'bg-slate-800';
 function getColors(icon?: Icon): { background: string; fill?: string } {
   if (!icon) return { background: darkColor, fill: lightColor };
@@ -55,7 +55,7 @@ export function AppIcon({ name }: { name: string }) {
   return icon ? (
     <div
       dangerouslySetInnerHTML={{ __html: icon.svg }}
-      className={`${imgClass} p-2 flex justify-center items-center`}
+      className={`${imgClass} p-3 flex justify-center items-center`}
       style={{ fill: colors.fill }}
     />
   ) : (

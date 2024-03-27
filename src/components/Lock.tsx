@@ -19,7 +19,7 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
   return (
     <>
       <button
-        className="icon absolute top-4 right-4 bg-danger"
+        className="icon fixed top-4 right-4 bg-danger"
         onClick={async () => {
           try {
             await signOut();

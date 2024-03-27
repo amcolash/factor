@@ -84,7 +84,7 @@ function Authorized({ user }: { user: User }) {
 
   const buttons = useMemo(
     () => (
-      <div className="absolute bottom-24 right-[30px]">
+      <div className="fixed bottom-24 right-[30px]">
         <button onClick={() => setToken(undefined)} className="p-2.5 rounded-full" {...longPressEvent}>
           <FaLock />
         </button>
