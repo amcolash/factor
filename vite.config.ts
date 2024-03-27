@@ -1,9 +1,20 @@
 import { defineConfig } from 'vite';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
+
+const KEY = './cert/privkey.pem';
+const CERT = './cert/cert.pem';
+
+let https;
+if (existsSync(KEY) && existsSync(CERT)) {
+  https = {
+    key: readFileSync('.cert/privkey.pem'),
+    cert: readFileSync('.cert/cert.pem'),
+  };
+}
 
 const manifest: Partial<ManifestOptions> = {
   theme_color: '#4b787d',
@@ -54,10 +65,7 @@ export default defineConfig({
   },
   server: {
     host: true,
-    https: {
-      key: readFileSync('.cert/privkey.pem'),
-      cert: readFileSync('.cert/cert.pem'),
-    },
+    https,
   },
   plugins: [
     react(),
