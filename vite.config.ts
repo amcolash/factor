@@ -17,7 +17,7 @@ if (existsSync(KEY) && existsSync(CERT)) {
 }
 
 const manifest: Partial<ManifestOptions> = {
-  theme_color: '#4b787d',
+  theme_color: '#2c2155',
   background_color: '#051524',
   display: 'standalone',
   start_url: '/factor/',

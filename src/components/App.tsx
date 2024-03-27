@@ -12,12 +12,12 @@ import { toast } from 'react-toastify';
 import { encrypt } from '@metamask/browser-passworder';
 import { CodeContext } from '../contexts/CodeContext';
 import useLongPress from '../hooks/useLongPress';
+import { LogoPage } from './Logo';
 
 export function App() {
   const [user, loading, error] = useAuthState(auth);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (loading || error) return <LogoPage>{error && <p>Error: {error.message}</p>}</LogoPage>;
 
   if (!user) return <Login />;
   return <Authorized user={user} />;
@@ -93,9 +93,13 @@ function Authorized({ user }: { user: User }) {
     [longPressEvent]
   );
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  if (!value || value.data() === undefined) return <p>No data</p>;
+  if (loading || error || !value || value.data() === undefined)
+    return (
+      <LogoPage>
+        {error && <p>Error: {error.message}</p>}
+        {!value || (value.data() === undefined && <p>No data</p>)}
+      </LogoPage>
+    );
 
   if (!token) return <Lock unlock={(code) => setToken(code)} encryptedCode={value.data()?.code!} />;
 

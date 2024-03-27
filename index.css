@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-  @apply bg-gradient-to-tr from-secondary via-secondary to-[rgb(44,33,85)] text-white bg-no-repeat min-h-screen;
+  @apply bg-gradient-to-tr from-secondary via-secondary to-[#2c2155] text-white bg-no-repeat min-h-screen;
 }
 
 *:focus {

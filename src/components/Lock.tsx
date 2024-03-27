@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { auth, db } from '../util/firebase';
 import { clearIndexedDbPersistence, terminate } from 'firebase/firestore';
 import { decrypt } from '@metamask/browser-passworder';
-import Logo from '../logo.png';
+import { Logo } from './Logo';
 
 export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void; encryptedCode: string }) {
   const ref = useRef<HTMLInputElement[]>(null);
@@ -33,17 +33,17 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
         <FaSignOutAlt />
       </button>
       <div
-        className="w-full h-[100svh] flex flex-col justify-center items-center"
+        className="w-screen h-[100svh] flex flex-col justify-center items-center"
         onClick={() => {
           if (ref.current) ref.current[0].focus();
         }}
       >
         <h1 className="mt-30 text-center text-5xl font-bold mb-2">Factor</h1>
-        <img src={Logo} className="h-52 mb-10" style={{ clipPath: 'circle(40%)' }} />
+        <Logo />
         <div className="flex">
           <PinField
             length={6}
-            className="border border-slate-500 w-12 h-12 m-2 rounded-lg text-center text-6xl p-1 outline-none outline-offset-0 outline-4"
+            className="border border-slate-500 w-11 sm:w-12 h-14 m-2 rounded-lg text-center text-6xl p-1 outline-none outline-offset-0 outline-4"
             type="password"
             inputMode="numeric"
             ref={ref}
