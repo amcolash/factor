@@ -9,7 +9,8 @@
     "strict": true,
     "target": "ES2015",
     "allowSyntheticDefaultImports": true,
-    "types": ["vite-plugin-pwa/client", "vite"]
+    "types": ["vite-plugin-pwa/client", "vite"],
+    "module": "ES2020"
   },
   "include": ["src/**/*"]
 }

@@ -6,15 +6,26 @@ import 'react-circular-progressbar/dist/styles.css';
 import { useMemo, useState } from 'react';
 import { DocumentReference } from 'firebase/firestore';
 import { EditKey } from './EditKey';
-import { FaEdit, FaPlus } from 'react-icons/fa';
 import { useTailwind } from '../hooks/useTailwind';
 
-export function TOTP({ userData, userRef }: { userData: UserData; userRef: DocumentReference }) {
+export function TOTP({
+  userData,
+  userRef,
+  editMode,
+  setEditMode,
+  editKey,
+  setEditKey,
+}: {
+  userData: UserData;
+  userRef: DocumentReference;
+  editMode: boolean;
+  setEditMode: (value: boolean) => void;
+  editKey: boolean;
+  setEditKey: (value: boolean) => void;
+}) {
   const { time, timestamp } = useRefreshTimer();
 
   const [search, setSearch] = useState('');
-  const [editMode, setEditMode] = useState(false);
-  const [editKey, setEditKey] = useState(false);
   const [keyToEdit, setKeyToEdit] = useState<Key>();
   const tailwind = useTailwind();
 
@@ -82,10 +93,10 @@ export function TOTP({ userData, userRef }: { userData: UserData; userRef: Docum
         style={{ transform: `scaleX(${(remainingSeconds / 30) * 100}%)` }}
       ></div>
 
-      <div className="flex justify-center w-full fixed bottom-2 left-0 right-0">
+      <div className="flex justify-center w-full fixed bottom-2 left-0 right-0 pointer-events-none">
         <div className="w-16 h-16 p-1 mb-6">
           <CircularProgressbar
-            value={remainingSeconds}
+            value={remainingSeconds - 1}
             maxValue={30}
             text={remainingSeconds.toString()}
             styles={buildStyles({
@@ -98,16 +109,6 @@ export function TOTP({ userData, userRef }: { userData: UserData; userRef: Docum
           />
         </div>
       </div>
-
-      <button
-        onClick={() => {
-          if (editMode) setEditMode(false);
-          else setEditKey(true);
-        }}
-        className={'icon fixed bottom-6 right-6 rounded-full !p-4 transition-transform' + (editMode ? ' rotate-45' : '')}
-      >
-        <FaPlus />
-      </button>
 
       <div className="flex flex-col gap-4 m-6 sm:m-8 items-center">{tokens}</div>
 

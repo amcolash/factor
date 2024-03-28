@@ -4,15 +4,14 @@ import { TOTP } from './TOTP';
 import { auth } from '../util/firebase';
 import { useUserData } from '../hooks/useUserData';
 import { Lock } from './Lock';
-import { useEffect, useMemo, useState } from 'react';
-import { FaLock } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 import { setDoc, updateDoc } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { encrypt } from '@metamask/browser-passworder';
 import { CodeContext } from '../contexts/CodeContext';
-import useLongPress from '../hooks/useLongPress';
 import { LogoPage } from './Logo';
+import { Menu } from './Menu';
 
 export function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -54,13 +53,10 @@ async function promptCode(token?: string): Promise<string | undefined> {
 
 function Authorized({ user }: { user: User }) {
   const { value, loading, error, userRef } = useUserData();
-  const [token, setToken] = useState<string>();
-  const longPressEvent = useLongPress(async () => {
-    const code = await promptCode(token);
 
-    if (code) updateDoc(userRef, { code });
-    else toast.error('Failed to update code');
-  }, 1000);
+  const [token, setToken] = useState<string>();
+  const [editMode, setEditMode] = useState(false);
+  const [editKey, setEditKey] = useState(false);
 
   useEffect(() => {
     const listener = () => {
@@ -82,16 +78,12 @@ function Authorized({ user }: { user: User }) {
     }
   }, [value, loading, error]);
 
-  const buttons = useMemo(
-    () => (
-      <div className="fixed bottom-24 right-[30px]">
-        <button onClick={() => setToken(undefined)} className="p-2.5 rounded-full" {...longPressEvent}>
-          <FaLock />
-        </button>
-      </div>
-    ),
-    [longPressEvent]
-  );
+  const updateCode = async () => {
+    const code = await promptCode(token);
+
+    if (code) updateDoc(userRef, { code });
+    else toast.error('Failed to update code');
+  };
 
   if (loading || error || !value || value.data() === undefined)
     return (
@@ -105,8 +97,21 @@ function Authorized({ user }: { user: User }) {
 
   return (
     <CodeContext.Provider value={token}>
-      {buttons}
-      <TOTP userData={value.data()!} userRef={userRef} />
+      <Menu
+        lock={() => setToken(undefined)}
+        updateCode={updateCode}
+        editMode={editMode}
+        setEditKey={setEditKey}
+        setEditMode={setEditMode}
+      />
+      <TOTP
+        userData={value.data()!}
+        userRef={userRef}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        editKey={editKey}
+        setEditKey={setEditKey}
+      />
     </CodeContext.Provider>
   );
 }

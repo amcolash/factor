@@ -27,20 +27,10 @@ if (!isBrowser) {
 }
 
 function Container() {
-  const isMobile = useIsMobile();
-
   return (
     <>
       <App />
-      <ToastContainer
-        theme="dark"
-        position="bottom-center"
-        bodyClassName={isMobile ? 'text-right' : ''}
-        transition={Zoom}
-        autoClose={1000}
-        hideProgressBar
-        closeButton={false}
-      />
+      <ToastContainer theme="dark" position="bottom-center" transition={Zoom} autoClose={1000} hideProgressBar closeButton={false} />
     </>
   );
 }

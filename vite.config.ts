@@ -1,12 +1,13 @@
 import { defineConfig } from 'vite';
 import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
 
-const KEY = './cert/privkey.pem';
-const CERT = './cert/cert.pem';
+const KEY = join(__dirname, '/.cert/privkey.pem');
+const CERT = join(__dirname, '/.cert/cert.pem');
 
 let https;
 if (existsSync(KEY) && existsSync(CERT)) {

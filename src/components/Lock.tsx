@@ -8,13 +8,37 @@ import { clearIndexedDbPersistence, terminate } from 'firebase/firestore';
 import { decrypt } from '@metamask/browser-passworder';
 import { Logo } from './Logo';
 
+let unlocked = false;
+
 export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void; encryptedCode: string }) {
   const ref = useRef<HTMLInputElement[]>(null);
   const [signOut] = useSignOut(auth);
 
   useEffect(() => {
     setTimeout(() => ref.current?.[0].focus(), 150);
+
+    if (process.env.NODE_ENV === 'development' && !unlocked) {
+      onCodeEntered(import.meta.env.VITE_CODE);
+      unlocked = true;
+    }
   }, []);
+
+  const onCodeEntered = async (code: string) => {
+    try {
+      const decrypted = (await decrypt(code, encryptedCode)) as { token: string };
+      unlock(decrypted.token);
+    } catch (err) {
+      console.log(err, code);
+      toast.error('Invalid code');
+    }
+
+    if (ref.current) {
+      ref.current.forEach((input) => {
+        input.value = '';
+      });
+      ref.current[0].focus();
+    }
+  };
 
   return (
     <>
@@ -47,21 +71,7 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
             type="password"
             inputMode="numeric"
             ref={ref}
-            onComplete={async (code) => {
-              try {
-                const decrypted = (await decrypt(code, encryptedCode)) as { token: string };
-                unlock(decrypted.token);
-              } catch (err) {
-                toast.error('Invalid code');
-              }
-
-              if (ref.current) {
-                ref.current.forEach((input) => {
-                  input.value = '';
-                });
-                ref.current[0].focus();
-              }
-            }}
+            onComplete={onCodeEntered}
             onClick={(e) => e.stopPropagation()}
           />
         </div>
