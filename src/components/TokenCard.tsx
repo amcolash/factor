@@ -75,29 +75,24 @@ export function TokenCard({
         </div>
       </div>
 
-      <div
-        className={
-          'flex justify-end items-center gap-2 sm:w-16 md:w-32 h-12 transition-opacity duration-500 ' +
-          (editMode ? '' : 'pointer-events-none')
-        }
-        style={{ opacity: editMode ? 1 : 0 }}
-      >
-        <button
-          className="absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white hover:brightness-100 hover:bg-danger transition-all duration-300"
-          style={{ pointerEvents: editMode ? 'auto' : 'none' }}
-          onClick={(e) => {
-            e.stopPropagation();
+      <button
+        className="absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white hover:brightness-100 hover:bg-danger transition-all duration-300"
+        style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
+        onClick={(e) => {
+          e.stopPropagation();
 
-            const confirm = window.confirm('Are you sure you want to remove this token?');
-            if (confirm) {
-              const confirm2 = window.confirm('Are you really sure?');
-              if (confirm2) updateDoc(userRef, { keys: arrayRemove(data) });
-            }
-          }}
-        >
-          <FaTimes />
-        </button>
-      </div>
+          const confirm = window.confirm('Are you sure you want to remove this token?');
+          if (confirm) {
+            const confirm2 = window.confirm('Are you really sure?');
+            if (confirm2) updateDoc(userRef, { keys: arrayRemove(data) });
+          }
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <FaTimes />
+      </button>
     </div>
   );
 

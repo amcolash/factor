@@ -26,6 +26,9 @@ if (!isBrowser) {
   window.resizeTo(500, 760);
 }
 
+const nav = navigator as any;
+if (nav.virtualKeyboard) nav.virtualKeyboard.overlaysContent = true;
+
 function Container() {
   return (
     <>

@@ -120,7 +120,11 @@ export function TOTP({
             setKeyToEdit(undefined);
           }}
         >
-          <div className="max-w-screen-md bg-slate-700 rounded-lg p-8" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="max-w-screen-md bg-slate-700 rounded-lg p-8"
+            onClick={(e) => e.stopPropagation()}
+            style={{ marginTop: 'calc(-1 * env(keyboard-inset-height))' }}
+          >
             <EditKey
               name={keyToEdit?.name}
               secret={keyToEdit?.secret}

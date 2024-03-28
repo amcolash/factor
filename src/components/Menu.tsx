@@ -25,15 +25,23 @@ export function Menu({
     },
   });
 
-  const bindPlus = useLongPress(() => setEditMode(true), {
-    threshold: 600,
-    onCancel: (e, { reason }) => {
-      if (reason === LongPressCallbackReason.CancelledByRelease) {
-        if (editMode) setEditMode(false);
-        else setEditKey(true);
-      }
+  const bindPlus = useLongPress(
+    () => {
+      setEditMode(true);
     },
-  });
+    {
+      threshold: 600,
+      onCancel: (e, { reason }) => {
+        if (reason === LongPressCallbackReason.CancelledByRelease) {
+          if (editMode) {
+            setEditMode(false);
+          } else {
+            setTimeout(() => setEditKey(true), 10); // Delay to prevent immediate closing of modal (not sure why)
+          }
+        }
+      },
+    }
+  );
 
   return (
     <div className="fixed bottom-8 right-8 flex flex-col gap-4">

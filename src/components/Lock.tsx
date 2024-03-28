@@ -61,6 +61,7 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
         onClick={() => {
           if (ref.current) ref.current[0].focus();
         }}
+        style={{ marginTop: 'calc(-1 * env(keyboard-inset-height) / 2)' }}
       >
         <h1 className="mt-30 text-center text-5xl font-bold mb-2">Factor</h1>
         <Logo />
