@@ -76,7 +76,7 @@ export function TokenCard({
       </div>
 
       <button
-        className="absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white hover:brightness-100 hover:bg-danger transition-all duration-300"
+        className="absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white hover:brightness-100 sm:hover:bg-danger transition-all duration-300"
         style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
         onClick={(e) => {
           e.stopPropagation();
