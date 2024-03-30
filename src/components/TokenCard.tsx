@@ -31,30 +31,34 @@ export function TokenCard({
 }) {
   const encryptionToken = useContext(CodeContext) || '';
   const [secret, setSecret] = useState('');
+  const [hidden, setHidden] = useState(true);
   const isMobile = useIsMobile();
 
   const bindPress = useLongPress(() => setEditMode(true), {
     threshold: 600,
     onCancel: (e, { reason }) => {
       if (reason === LongPressCallbackReason.CancelledByRelease) {
+        if (hidden) setTimeout(() => setHidden(false), 100);
         if (editMode) onEdit();
       }
     },
   });
 
   useEffect(() => {
+    if (hidden) return;
+
     decrypt(encryptionToken, data.secret)
       .then((decrypted) => setSecret((decrypted as { secret: string }).secret))
       .catch((err) => {
         console.error(err);
         setSecret('Error');
       });
-  }, [data.secret, encryptionToken]);
+  }, [data.secret, encryptionToken, hidden]);
 
   const timeChunk = Math.floor(timestamp.getTime() / 30000);
 
   const token = useMemo(() => {
-    if (secret.length === 0 || secret === 'Error') return 'Token Error';
+    if (secret.length === 0 || secret === 'Error' || hidden) return 'Token Error';
 
     try {
       return TOTP.generate(secret.replace(/\s+/g, ''), { timestamp: timeChunk * 30000 }).otp;
@@ -62,7 +66,7 @@ export function TokenCard({
       console.error(err);
       return 'Token Error';
     }
-  }, [secret, timeChunk]);
+  }, [secret, timeChunk, hidden]);
 
   const innerContents = (
     <div
@@ -78,7 +82,9 @@ export function TokenCard({
         <div className="flex flex-col items-start justify-center">
           <h2 className="font-bold capitalize">{data.name}</h2>
           <div>
-            {secret.length === 0 ? (
+            {hidden ? (
+              '*** ***'
+            ) : secret.length === 0 ? (
               'Decrypting...'
             ) : token === 'Token Error' ? (
               'Token Error'
@@ -113,7 +119,7 @@ export function TokenCard({
     </div>
   );
 
-  if (editMode) return innerContents;
+  if (editMode || hidden) return innerContents;
 
   return (
     <CopyToClipboard
