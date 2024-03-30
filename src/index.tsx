@@ -4,7 +4,6 @@ import { ToastContainer, Zoom } from 'react-toastify';
 import { Buffer } from 'buffer';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerSW } from 'virtual:pwa-register';
-import { useIsMobile } from './hooks/useIsMobile';
 
 // Fixes for browser-passworder
 window.global ||= window;
@@ -26,6 +25,7 @@ if (!isBrowser) {
   window.resizeTo(500, 760);
 }
 
+// Enable virtual keyboard api
 const nav = navigator as any;
 if (nav.virtualKeyboard) nav.virtualKeyboard.overlaysContent = true;
 

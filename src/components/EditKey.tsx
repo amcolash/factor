@@ -63,8 +63,15 @@ export function EditKey(props: EditKeyProps) {
         <div className="flex gap-4 items-center">
           <AppIcon name={name} />
           <div className="flex flex-col gap-2">
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Site name" autoFocus type="text" />
-            <input value={secret} onChange={(e) => setSecret(e.target.value)} placeholder="Secret" type="password" autoComplete="false" />
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Site name"
+              autoFocus
+              autoComplete="false"
+              type="text"
+            />
+            <input value={secret} onChange={(e) => setSecret(e.target.value)} placeholder="Secret" autoComplete="false" type="password" />
           </div>
         </div>
 

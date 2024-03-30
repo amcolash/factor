@@ -89,11 +89,11 @@ export function TOTP({
   return (
     <>
       <div
-        className="fixed bottom-0 left-0 h-1.5 bg-primary transition-transform duration-700 w-screen"
+        className="fixed bottom-0 left-0 h-1.5 bg-primary transition-transform duration-700 w-screen z-20 rounded"
         style={{ transform: `scaleX(${(remainingSeconds / 30) * 100}%)` }}
       ></div>
 
-      <div className="flex justify-center w-full fixed bottom-2 left-0 right-0 pointer-events-none">
+      <div className="flex sm:justify-center pl-6 sm:pl-0 w-full fixed bottom-0 left-0 right-0 pointer-events-none z-10 backdrop-blur-lg pt-4">
         <div className="w-16 h-16 p-1 mb-6">
           <CircularProgressbar
             value={remainingSeconds - 1}
@@ -110,11 +110,11 @@ export function TOTP({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 m-6 sm:m-8 items-center">{tokens}</div>
+      <div className="flex flex-col gap-4 m-6 sm:m-8 items-center pb-36">{tokens}</div>
 
       {editKey && (
         <div
-          className="absolute z-10 inset-0 bg-slate-900 bg-opacity-75 flex justify-center items-center"
+          className="fixed z-10 inset-0 bg-slate-900 bg-opacity-75 flex justify-center items-center"
           onClick={() => {
             setEditKey(false);
             setKeyToEdit(undefined);

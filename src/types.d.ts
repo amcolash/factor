@@ -6,6 +6,7 @@ declare module 'is-dark-color' {
   export default function isDarkColor(hexColor: string, options?: isDarkColorOptions): boolean;
 }
 
+declare module '*.jpg';
 declare module '*.png';
 
 /// <reference types="vite/client" />

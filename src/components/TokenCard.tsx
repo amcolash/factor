@@ -49,13 +49,19 @@ export function TokenCard({
         console.error(err);
         setSecret('Error');
       });
-  }, [data, encryptionToken]);
+  }, [data.secret, encryptionToken]);
 
   const timeChunk = Math.floor(timestamp.getTime() / 30000);
 
   const token = useMemo(() => {
     if (secret.length === 0 || secret === 'Error') return 'Token Error';
-    return TOTP.generate(secret.replace(/\s+/g, ''), { timestamp: timeChunk * 30000 }).otp;
+
+    try {
+      return TOTP.generate(secret.replace(/\s+/g, ''), { timestamp: timeChunk * 30000 }).otp;
+    } catch (err) {
+      console.error(err);
+      return 'Token Error';
+    }
   }, [secret, timeChunk]);
 
   const innerContents = (
@@ -71,7 +77,18 @@ export function TokenCard({
         <AppIcon name={data.name} />
         <div className="flex flex-col items-start justify-center">
           <h2 className="font-bold capitalize">{data.name}</h2>
-          <div>{secret.length === 0 ? 'Decrypting...' : token}</div>
+          <div>
+            {secret.length === 0 ? (
+              'Decrypting...'
+            ) : token === 'Token Error' ? (
+              'Token Error'
+            ) : (
+              <>
+                <span className="mr-2">{token.slice(0, 3)}</span>
+                <span>{token.slice(3, 6)}</span>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
