@@ -45,7 +45,7 @@ export function Menu({
 
   return (
     <div className="fixed bottom-8 right-8 flex flex-col gap-4">
-      <button className={buttonClass + ' !bg-slate-200 !text-primary outline outline-primary outline-2 -outline-offset-2'} {...bindLock()}>
+      <button className={buttonClass + ' !bg-slate-800 !text-primary outline outline-primary outline-2 -outline-offset-2'} {...bindLock()}>
         <FaLock />
       </button>
       <button className={'transition-transform ' + buttonClass + (editMode ? ' rotate-45' : '')} {...bindPlus()}>

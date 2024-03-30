@@ -15,7 +15,7 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
   const [signOut] = useSignOut(auth);
 
   useEffect(() => {
-    setTimeout(() => ref.current?.[0].focus(), 150);
+    setTimeout(() => ref.current?.[0].focus(), 250);
 
     if (process.env.NODE_ENV === 'development' && !unlocked) {
       onCodeEntered(import.meta.env.VITE_CODE);
