@@ -1,4 +1,4 @@
-import image from '../logo.png';
+import image from '../images/logo.png';
 
 export function Logo({ className }: { className?: string }) {
   return <img src={image} className={'h-52 mb-10 ' + className} style={{ clipPath: 'circle(40%)' }} />;

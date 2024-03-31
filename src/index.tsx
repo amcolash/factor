@@ -14,7 +14,7 @@ globalThis.Buffer = Buffer;
 const updateSW = registerSW({
   onNeedRefresh() {
     if (confirm('New content available. Reload?')) {
-      updateSW(true);
+      updateSW();
     }
   },
 });

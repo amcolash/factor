@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { defineConfig, splitVendorChunkPlugin } from 'vite';
+import { defineConfig } from 'vite';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -52,16 +52,24 @@ const manifest: Partial<ManifestOptions> = {
 export default defineConfig({
   base: '/factor/',
   build: {
+    modulePreload: {
+      resolveDependencies: (url, deps, context) => {
+        return [];
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks: (id: string) => {
-          if (id.includes('react/') || id.includes('react-dom')) return 'react';
           if (id.includes('@firebase')) return 'firebase';
           if (id.includes('@yudiel/react-qr-scanner')) return 'qr-scanner';
           if (id.includes('simple-icons')) return 'simple-icons';
+          if (id.includes('node_modules')) return 'vendor';
+
+          return 'index';
         },
       },
     },
+    sourcemap: true,
   },
   server: {
     host: true,
@@ -70,7 +78,6 @@ export default defineConfig({
   plugins: [
     react(),
     tsconfigPaths(),
-    splitVendorChunkPlugin(),
     VitePWA({
       workbox: {
         // cache all imports
