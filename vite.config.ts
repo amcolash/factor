@@ -1,10 +1,9 @@
-import { defineConfig } from 'vite';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
-
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
+import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 const KEY = join(__dirname, '/.cert/privkey.pem');
 const CERT = join(__dirname, '/.cert/cert.pem');
@@ -55,11 +54,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          firebase: ['@firebase/app', '@firebase/auth', '@firebase/firestore'],
-          'qr-scanner': ['@yudiel/react-qr-scanner'],
-          'simple-icons': ['simple-icons'],
+        manualChunks: (id: string) => {
+          if (id.includes('react/') || id.includes('react-dom')) return 'react';
+          if (id.includes('@firebase')) return 'firebase';
+          if (id.includes('@yudiel/react-qr-scanner')) return 'qr-scanner';
+          if (id.includes('simple-icons')) return 'simple-icons';
         },
       },
     },
@@ -71,6 +70,7 @@ export default defineConfig({
   plugins: [
     react(),
     tsconfigPaths(),
+    splitVendorChunkPlugin(),
     VitePWA({
       workbox: {
         // cache all imports
