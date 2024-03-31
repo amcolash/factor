@@ -1,17 +1,18 @@
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { Login } from './Login';
-import { TOTP } from './TOTP';
-import { auth } from '../util/firebase';
-import { useUserData } from '../hooks/useUserData';
-import { Lock } from './Lock';
-import { useEffect, useState } from 'react';
-import { setDoc, updateDoc } from 'firebase/firestore';
-import { User } from 'firebase/auth';
-import { toast } from 'react-toastify';
 import { encrypt } from '@metamask/browser-passworder';
+import { User } from 'firebase/auth';
+import { setDoc, updateDoc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { toast } from 'react-toastify';
+
 import { CodeContext } from '../contexts/CodeContext';
+import { useUserData } from '../hooks/useUserData';
+import { auth } from '../util/firebase';
+import { Lock } from './Lock';
+import { Login } from './Login';
 import { LogoPage } from './Logo';
 import { Menu } from './Menu';
+import { TOTP } from './TOTP';
 
 export function App() {
   const [user, loading, error] = useAuthState(auth);

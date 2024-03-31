@@ -1,11 +1,12 @@
+import { encrypt } from '@metamask/browser-passworder';
 import { DocumentReference, arrayRemove, arrayUnion, updateDoc } from 'firebase/firestore';
 import { useContext, useState } from 'react';
 import { FaQrcode, FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { QR } from './QR';
-import { AppIcon } from './AppIcon';
+
 import { CodeContext } from '../contexts/CodeContext';
-import { encrypt } from '@metamask/browser-passworder';
+import { AppIcon } from './AppIcon';
+import { QR } from './QR';
 
 interface EditKeyProps {
   name?: string;
@@ -71,7 +72,13 @@ export function EditKey(props: EditKeyProps) {
               autoComplete="false"
               type="text"
             />
-            <input value={secret} onChange={(e) => setSecret(e.target.value)} placeholder="Secret" autoComplete="false" type="password" />
+            <input
+              value={secret}
+              onChange={(e) => setSecret(e.target.value)}
+              placeholder="Secret"
+              autoComplete="false"
+              type="password"
+            />
           </div>
         </div>
 

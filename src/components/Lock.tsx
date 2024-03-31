@@ -1,11 +1,12 @@
+import { decrypt } from '@metamask/browser-passworder';
+import { clearIndexedDbPersistence, terminate } from 'firebase/firestore';
 import { useEffect, useRef } from 'react';
 import { useSignOut } from 'react-firebase-hooks/auth';
 import { FaSignOutAlt } from 'react-icons/fa';
 import PinField from 'react-pin-field';
 import { toast } from 'react-toastify';
+
 import { auth, db } from '../util/firebase';
-import { clearIndexedDbPersistence, terminate } from 'firebase/firestore';
-import { decrypt } from '@metamask/browser-passworder';
 import { Logo } from './Logo';
 
 let unlocked = false;
@@ -68,7 +69,7 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
         <div className="flex">
           <PinField
             length={6}
-            className="border border-slate-500 w-11 sm:w-12 h-14 m-2 rounded-lg text-center text-6xl p-1 outline-none outline-offset-0 outline-4"
+            className="border border-slate-500 w-11 sm:w-12 h-14 m-1.5 rounded-lg text-center text-6xl p-1 outline-none outline-offset-0 outline-4"
             type="password"
             inputMode="numeric"
             ref={ref}

@@ -1,16 +1,22 @@
+import { decrypt } from '@metamask/browser-passworder';
 import { DocumentReference, arrayRemove, updateDoc } from 'firebase/firestore';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { TOTP } from 'totp-generator';
-import { FaTimes } from 'react-icons/fa';
-import { Key } from '../hooks/useUserData';
-
-import { AppIcon } from './AppIcon';
-import { CodeContext } from '../contexts/CodeContext';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { decrypt } from '@metamask/browser-passworder';
 import { LongPressCallbackReason, useLongPress } from 'use-long-press';
+
+import { CodeContext } from '../contexts/CodeContext';
+import { useCopyToClipboard } from '../hooks/useCopyToClipboard';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { Key } from '../hooks/useUserData';
+import { AppIcon } from './AppIcon';
+
+enum HiddenType {
+  Hidden,
+  FirstVisible,
+  Visible,
+}
 
 export function TokenCard({
   data,
@@ -31,21 +37,23 @@ export function TokenCard({
 }) {
   const encryptionToken = useContext(CodeContext) || '';
   const [secret, setSecret] = useState('');
-  const [hidden, setHidden] = useState(true);
+  const [hidden, setHidden] = useState<HiddenType>(HiddenType.Hidden);
   const isMobile = useIsMobile();
+  const [copy] = useCopyToClipboard();
 
   const bindPress = useLongPress(() => setEditMode(true), {
     threshold: 600,
     onCancel: (e, { reason }) => {
       if (reason === LongPressCallbackReason.CancelledByRelease) {
-        if (hidden) setTimeout(() => setHidden(false), 100);
-        if (editMode) onEdit();
+        if (hidden === HiddenType.Hidden) setHidden(HiddenType.FirstVisible);
+        else if (editMode) onEdit();
+        else copyToken();
       }
     },
   });
 
   useEffect(() => {
-    if (hidden) return;
+    if (hidden === HiddenType.Hidden) return;
 
     decrypt(encryptionToken, data.secret)
       .then((decrypted) => setSecret((decrypted as { secret: string }).secret))
@@ -58,7 +66,7 @@ export function TokenCard({
   const timeChunk = Math.floor(timestamp.getTime() / 30000);
 
   const token = useMemo(() => {
-    if (secret.length === 0 || secret === 'Error' || hidden) return 'Token Error';
+    if (secret.length === 0 || secret === 'Error' || hidden === HiddenType.Hidden) return 'Token Error';
 
     try {
       return TOTP.generate(secret.replace(/\s+/g, ''), { timestamp: timeChunk * 30000 }).otp;
@@ -68,7 +76,24 @@ export function TokenCard({
     }
   }, [secret, timeChunk, hidden]);
 
-  const innerContents = (
+  const copyToken = useCallback(
+    () =>
+      copy(token).then((result) => {
+        if (result && token !== 'Token Error')
+          toast.info(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '' });
+        else toast.error('Failed to copy code');
+      }),
+    [token, data, isMobile, copy]
+  );
+
+  useEffect(() => {
+    if (hidden === HiddenType.FirstVisible && token !== 'Token Error') {
+      copyToken();
+      setHidden(HiddenType.Visible);
+    }
+  }, [hidden, token]);
+
+  return (
     <div
       className={
         'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[97%] relative cursor-pointer transition-transform duration-1000 rotate-0' +
@@ -82,7 +107,7 @@ export function TokenCard({
         <div className="flex flex-col items-start justify-center">
           <h2 className="font-bold capitalize">{data.name}</h2>
           <div>
-            {hidden ? (
+            {hidden === HiddenType.Hidden ? (
               '*** ***'
             ) : secret.length === 0 ? (
               'Decrypting...'
@@ -117,19 +142,5 @@ export function TokenCard({
         <FaTimes />
       </button>
     </div>
-  );
-
-  if (editMode || hidden) return innerContents;
-
-  return (
-    <CopyToClipboard
-      text={token}
-      onCopy={(text, result) => {
-        if (result) toast.info(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '' });
-        else toast.error('Failed to copy code');
-      }}
-    >
-      {innerContents}
-    </CopyToClipboard>
   );
 }

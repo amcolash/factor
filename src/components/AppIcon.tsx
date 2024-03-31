@@ -1,7 +1,6 @@
-import * as icons from 'simple-icons';
-import isDarkColor from 'is-dark-color';
 import levenshtein from 'js-levenshtein';
 import { FaLock } from 'react-icons/fa';
+import * as icons from 'simple-icons';
 
 import bastillion from '../images/bastillion.png';
 import betterment from '../images/betterment.png';
@@ -23,10 +22,14 @@ function getIcon(name?: string): Icon | string | undefined {
   let icon = Object.entries(icons)
     .filter(
       (e) =>
-        name.toLowerCase().includes(e[1].title.toLowerCase()) && levenshtein(name.toLowerCase(), e[1].title.toLowerCase()) < name.length / 2
+        name.toLowerCase().includes(e[1].title.toLowerCase()) &&
+        levenshtein(name.toLowerCase(), e[1].title.toLowerCase()) < name.length / 2
     )
     .sort((a, b) => {
-      return levenshtein(name.toLowerCase(), a[1].title.toLowerCase()) - levenshtein(name.toLowerCase(), b[1].title.toLowerCase());
+      return (
+        levenshtein(name.toLowerCase(), a[1].title.toLowerCase()) -
+        levenshtein(name.toLowerCase(), b[1].title.toLowerCase())
+      );
     })[0];
 
   // handle one-off cases

@@ -1,4 +1,5 @@
-import { useAuthState, useSignInWithGoogle, useSignOut } from 'react-firebase-hooks/auth';
+import { useAuthState, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+
 import { auth } from '../util/firebase';
 
 export function Login() {
