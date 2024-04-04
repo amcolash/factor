@@ -24,28 +24,28 @@ const manifest: Partial<ManifestOptions> = {
   id: 'com.amcolash.factor',
   name: 'Factor',
   short_name: 'Factor',
-  description: '2 Factor Authenticator',
+  description: 'Factor is a 2FA app built using React and Firebase. Data is stored offline and encrypted at rest.',
   icons: [
     {
-      src: './logo-192x192.png',
+      src: './logo-192.png',
       sizes: '192x192',
       type: 'image/png',
       purpose: 'maskable',
     },
     {
-      src: './logo-512x512.png',
+      src: './logo-512.png',
       sizes: '512x512',
       type: 'image/png',
       purpose: 'maskable',
     },
     {
-      src: './logo-rounded-192x192.png',
+      src: './logo-rounded-192.png',
       sizes: '192x192',
       type: 'image/png',
       purpose: 'any',
     },
     {
-      src: './logo-rounded-512x512.png',
+      src: './logo-rounded-512.png',
       sizes: '512x512',
       type: 'image/png',
       purpose: 'any',
