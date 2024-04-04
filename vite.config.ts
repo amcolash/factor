@@ -48,7 +48,7 @@ const manifest: Partial<ManifestOptions> = {
       src: './icon-rounded-512x512.png',
       sizes: '512x512',
       type: 'image/png',
-      purpose: 'ant',
+      purpose: 'any',
     },
   ],
 };
