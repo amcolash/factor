@@ -27,25 +27,25 @@ const manifest: Partial<ManifestOptions> = {
   description: '2 Factor Authenticator',
   icons: [
     {
-      src: './icon-192x192.png',
+      src: './logo-192x192.png',
       sizes: '192x192',
       type: 'image/png',
       purpose: 'maskable',
     },
     {
-      src: './icon-512x512.png',
+      src: './logo-512x512.png',
       sizes: '512x512',
       type: 'image/png',
       purpose: 'maskable',
     },
     {
-      src: './icon-rounded-192x192.png',
+      src: './logo-rounded-192x192.png',
       sizes: '192x192',
       type: 'image/png',
       purpose: 'any',
     },
     {
-      src: './icon-rounded-512x512.png',
+      src: './logo-rounded-512x512.png',
       sizes: '512x512',
       type: 'image/png',
       purpose: 'any',
