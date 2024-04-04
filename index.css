@@ -6,8 +6,15 @@ html {
   @apply bg-gradient-to-tr from-secondary via-secondary to-[#2c2155] text-white bg-no-repeat min-h-screen;
 }
 
-*:focus {
-  @apply outline-primary;
+* {
+  @apply outline-none outline-offset-0;
+  transition:
+    outline-width 0.25s,
+    outline-color 0.25s;
+}
+
+:focus {
+  @apply outline-4 outline-primary;
 }
 
 button {
