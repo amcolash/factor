@@ -27,28 +27,58 @@ const manifest: Partial<ManifestOptions> = {
   description: 'Factor is a 2FA app built using React and Firebase. Data is stored offline and encrypted at rest.',
   icons: [
     {
-      src: './logo-192.png',
+      src: './logos/logo-192.png',
       sizes: '192x192',
       type: 'image/png',
       purpose: 'maskable',
     },
     {
-      src: './logo-512.png',
+      src: './logos/logo-512.png',
       sizes: '512x512',
       type: 'image/png',
       purpose: 'maskable',
     },
     {
-      src: './logo-rounded-192.png',
+      src: './logos/logo-rounded-192.png',
       sizes: '192x192',
       type: 'image/png',
       purpose: 'any',
     },
     {
-      src: './logo-rounded-512.png',
+      src: './logos/logo-rounded-512.png',
       sizes: '512x512',
       type: 'image/png',
       purpose: 'any',
+    },
+  ],
+  screenshots: [
+    {
+      src: './screenshots/screenshot-tall-1.png',
+      sizes: '1059x2235',
+      type: 'image/png',
+      form_factor: 'narrow',
+      label: 'Lock Screen',
+    },
+    {
+      src: './screenshots/screenshot-tall-2.png',
+      sizes: '1059x2235',
+      type: 'image/png',
+      form_factor: 'narrow',
+      label: '2FA Codes',
+    },
+    {
+      src: './screenshots/screenshot-wide-1.png',
+      sizes: '2360x1640',
+      type: 'image/png',
+      form_factor: 'wide',
+      label: 'Lock Screen',
+    },
+    {
+      src: './screenshots/screenshot-wide-2.png',
+      sizes: '2360x1640',
+      type: 'image/png',
+      form_factor: 'wide',
+      label: '2FA Codes',
     },
   ],
 };
