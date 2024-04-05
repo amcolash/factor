@@ -68,7 +68,7 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
       <div className="flex">
         <PinField
           length={6}
-          className="border border-slate-500 w-11 sm:w-12 h-14 m-1.5 rounded-lg text-center text-6xl p-1 pb-3"
+          className="border border-slate-500 w-10 sm:w-12 h-14 m-1.5 rounded-lg text-center text-6xl p-1"
           type="password"
           inputMode="numeric"
           ref={ref}

@@ -1,15 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html {
   @apply text-white min-h-screen select-none;
+  font-family: 'Ubuntu', sans-serif;
 }
 
 /* This ensures that the gradient never overscrolls. Tip from: https://stackoverflow.com/a/78145994/2303432 */
 html:before {
   @apply bg-gradient-to-tr from-secondary via-secondary to-tertiary fixed inset-0 -z-10;
   content: '';
+}
+
+h1 {
+  @apply text-7xl;
+  font-family: 'Teko', sans-serif;
 }
 
 * {
