@@ -10,13 +10,26 @@ import idme from '../images/id.me.png';
 import justworks from '../images/justworks.jpg';
 import uwcu from '../images/uwcu.png';
 
+enum IconType {
+  Icon = 'Icon',
+  Image = 'Image',
+}
+
 interface Icon {
   svg: string;
   hex: string;
   title: string;
+  type: IconType.Icon;
+  padding?: boolean;
 }
 
-function getIcon(name?: string): Icon | string | undefined {
+interface Image {
+  url: string;
+  padding?: boolean;
+  type: IconType.Image;
+}
+
+function getIcon(name?: string): Icon | Image | undefined {
   if (!name) return undefined;
 
   let icon = Object.entries(icons)
@@ -33,48 +46,53 @@ function getIcon(name?: string): Icon | string | undefined {
     })[0];
 
   // handle one-off cases
-  switch (name) {
-    case 'Bastillion':
-      return bastillion;
-    case 'Betterment':
-      return betterment;
-    case 'Carta':
-      return carta;
-    case 'Guideline':
-      return guideline;
-    case 'ID.me':
-      return idme;
-    case 'Justworks':
-      return justworks;
-    case 'NAS':
-      return icons.siSynology;
-    case 'UW Credit Union':
-      return uwcu;
+  switch (name.toLowerCase()) {
+    case 'bastillion':
+      return { url: bastillion, padding: true, type: IconType.Image };
+    case 'betterment':
+      return { url: betterment, type: IconType.Image };
+    case 'carta':
+      return { url: carta, type: IconType.Image };
+    case 'facebook':
+      return { ...icons.siFacebook, padding: false, type: IconType.Icon };
+    case 'guideline':
+      return { url: guideline, type: IconType.Image };
+    case 'id.me':
+      return { url: idme, type: IconType.Image };
+    case 'justworks':
+      return { url: justworks, type: IconType.Image };
+    case 'nas':
+      return { ...icons.siSynology, type: IconType.Icon };
+    case 'uw credit union':
+    case 'uwcu':
+      return { url: uwcu, padding: true, type: IconType.Image };
     default:
       break;
   }
 
-  return icon ? icon[1] : undefined;
+  return icon ? { ...icon[1], type: IconType.Icon, padding: true } : undefined;
 }
 
 const darkColor = 'bg-slate-900';
 const lightColor = 'bg-slate-800';
-function getColors(icon?: Icon | string): { background: string; fill?: string } {
-  if (!icon || typeof icon === 'string') return { background: darkColor, fill: lightColor };
+function getColors(i?: Icon | Image): { background: string; fill?: string } {
+  if (!i || i.type === IconType.Image) return { background: darkColor, fill: lightColor };
 
-  // const dark = icon ? isDarkColor('#' + icon.hex) : false;
-  // let background = dark ? darkColor : lightColor;
+  const icon = i as Icon;
   let background = darkColor;
   let fill = '#' + icon.hex;
 
   // handle one-off cases
-  switch (icon.title) {
-    case 'Amazon':
+  switch (icon.title.toLowerCase()) {
+    case 'amazon':
       background = darkColor;
       break;
-    case 'GitHub':
-    case 'Patreon':
-    case 'Ubisoft':
+    case 'microsoft':
+      fill = '#00a2ed';
+      break;
+    case 'github':
+    case 'patreon':
+    case 'ubisoft':
       background = 'bg-slate-100';
       break;
   }
@@ -84,6 +102,7 @@ function getColors(icon?: Icon | string): { background: string; fill?: string } 
 
 export function AppIcon({ name, className }: { name: string; className?: string }) {
   const icon = getIcon(name);
+
   const colors = getColors(icon);
 
   const imgClass =
@@ -92,13 +111,21 @@ export function AppIcon({ name, className }: { name: string; className?: string 
     ' ' +
     className;
 
-  if (typeof icon === 'string') return <img src={icon} className={imgClass + ' object-cover'} />;
+  if (!icon)
+    return (
+      <div className={imgClass}>
+        <FaLock />
+      </div>
+    );
 
-  return icon ? (
-    <div dangerouslySetInnerHTML={{ __html: icon.svg }} className={`${imgClass} p-3 fill-[${colors.fill}]`} />
-  ) : (
-    <div className={imgClass}>
-      <FaLock />
-    </div>
+  if (icon.type === IconType.Image)
+    return <img src={icon.url} className={imgClass + ` object-cover ${icon.padding ? 'p-1' : ''}`} />;
+
+  return (
+    <div
+      dangerouslySetInnerHTML={{ __html: icon.svg }}
+      className={`${imgClass} ${icon.padding ? 'p-2.5' : 'p-0.5'}`}
+      style={{ fill: colors.fill }}
+    />
   );
 }
