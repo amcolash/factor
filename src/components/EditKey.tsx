@@ -49,7 +49,7 @@ export function EditKey(props: EditKeyProps) {
   return (
     <>
       <div
-        className="flex flex-col w-full gap-8"
+        className="flex flex-col gap-8"
         onKeyDown={(e) => {
           if (e.key === 'Enter') addKey(name, secret);
         }}
@@ -62,8 +62,8 @@ export function EditKey(props: EditKeyProps) {
         </div>
 
         <div className="flex gap-4 items-center">
-          <AppIcon name={name} />
-          <div className="flex flex-col gap-2">
+          <AppIcon name={name} className="w-14 h-14 sm:w-16 sm:h-16" />
+          <div className="flex flex-col gap-3 w-full">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}

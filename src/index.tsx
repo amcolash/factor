@@ -22,7 +22,6 @@ const updateSW = registerSW({
 // If a pwa on desktop, resize window a bit smaller
 const isBrowser = matchMedia('(display-mode: browser)').matches;
 if (!isBrowser) {
-  // window.moveTo(16, 16);
   window.resizeTo(500, 760);
 }
 

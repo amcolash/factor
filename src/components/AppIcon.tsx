@@ -82,22 +82,22 @@ function getColors(icon?: Icon | string): { background: string; fill?: string } 
   return { background, fill };
 }
 
-export function AppIcon({ name }: { name: string }) {
+export function AppIcon({ name, className }: { name: string; className?: string }) {
   const icon = getIcon(name);
   const colors = getColors(icon);
 
-  const imgClass = 'w-12 h-12 rounded-full border border-slate-400 ' + colors.background;
+  const imgClass =
+    'w-12 h-12 rounded-full border border-slate-400 flex justify-center items-center aspect-square ' +
+    colors.background +
+    ' ' +
+    className;
 
   if (typeof icon === 'string') return <img src={icon} className={imgClass + ' object-cover'} />;
 
   return icon ? (
-    <div
-      dangerouslySetInnerHTML={{ __html: icon.svg }}
-      className={`${imgClass} p-3 flex justify-center items-center`}
-      style={{ fill: colors.fill }}
-    />
+    <div dangerouslySetInnerHTML={{ __html: icon.svg }} className={`${imgClass} p-3 fill-[${colors.fill}]`} />
   ) : (
-    <div className={imgClass + ' flex justify-center items-center'}>
+    <div className={imgClass}>
       <FaLock />
     </div>
   );

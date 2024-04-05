@@ -3,11 +3,24 @@
 @tailwind utilities;
 
 html {
-  @apply bg-gradient-to-tr from-secondary via-secondary to-[#2c2155] text-white bg-no-repeat min-h-screen;
+  @apply text-white min-h-screen select-none;
 }
 
-*:focus {
-  @apply outline-primary;
+/* This ensures that the gradient never overscrolls. Tip from: https://stackoverflow.com/a/78145994/2303432 */
+html:before {
+  @apply bg-gradient-to-tr from-secondary via-secondary to-tertiary fixed inset-0 -z-10;
+  content: '';
+}
+
+* {
+  @apply outline-none outline-offset-0;
+  transition:
+    outline-width 0.25s,
+    outline-color 0.25s;
+}
+
+:focus {
+  @apply outline-4 outline-primary;
 }
 
 button {

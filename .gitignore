@@ -3,3 +3,4 @@ dist
 .cache
 .cert
 .env
+.DS_Store
