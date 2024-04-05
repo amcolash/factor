@@ -128,9 +128,9 @@ export function TOTP({
           }}
         >
           <div
-            className="max-w-screen-md bg-slate-700 rounded-lg p-8"
+            className="bg-slate-700 rounded-lg p-8 w-full"
             onClick={(e) => e.stopPropagation()}
-            style={{ marginTop: 'calc(-1 * env(keyboard-inset-height))' }}
+            style={{ marginTop: 'calc(-1 * env(keyboard-inset-height))', maxWidth: 'min(80vw, 600px)' }}
           >
             <EditKey
               name={keyToEdit?.name}
