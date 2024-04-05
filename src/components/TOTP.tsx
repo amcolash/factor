@@ -97,7 +97,7 @@ export function TOTP({
   return (
     <>
       <div
-        className="fixed bottom-1.5 h-1.5 bg-primary transition-all duration-700 z-20 rounded"
+        className="fixed bottom-1 h-1.5 bg-primary transition-all duration-700 z-20 rounded"
         style={{ left: `${(elapsedSeconds / 30) * 50}%`, right: `${(elapsedSeconds / 30) * 50}%` }}
       ></div>
 

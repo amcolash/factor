@@ -23,7 +23,14 @@ if (nav.virtualKeyboard) nav.virtualKeyboard.overlaysContent = true;
 // add this to prompt for a refresh
 const updateSW = registerSW({
   onNeedRefresh() {
-    toast.warn('New version available, click to update.', { autoClose: false, onClick: () => updateSW() });
+    toast.warn('New version available, tap to update.', {
+      autoClose: false,
+      onClick: () => {
+        updateSW();
+        toast.warn('Updating...', { autoClose: false });
+      },
+      closeOnClick: true,
+    });
   },
 });
 
