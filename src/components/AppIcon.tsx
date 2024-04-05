@@ -75,7 +75,7 @@ function getColors(icon?: Icon | string): { background: string; fill?: string } 
     case 'GitHub':
     case 'Patreon':
     case 'Ubisoft':
-      background = 'bg-slate-300';
+      background = 'bg-slate-100';
       break;
   }
 
