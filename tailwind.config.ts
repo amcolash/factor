@@ -7,6 +7,7 @@ export default {
       colors: {
         primary: '#4b888d',
         secondary: '#051524',
+        tertiary: '#2c2155',
         danger: '#f07f7b',
       },
       keyframes: {
