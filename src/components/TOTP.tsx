@@ -32,6 +32,7 @@ export function TOTP({
 
   const remainingMs = 30000 - (time.getTime() % 30000);
   const remainingSeconds = Math.ceil(remainingMs / 1000);
+  const elapsedSeconds = 30 - remainingSeconds;
 
   const tokens = useMemo(
     () => (
@@ -96,11 +97,11 @@ export function TOTP({
   return (
     <>
       <div
-        className="fixed bottom-0 left-0 h-1.5 bg-primary transition-transform duration-700 w-screen z-20 rounded"
-        style={{ transform: `scaleX(${(remainingSeconds / 30) * 100}%)` }}
+        className="fixed bottom-1.5 h-1.5 bg-primary transition-all duration-700 z-20 rounded"
+        style={{ left: `${(elapsedSeconds / 30) * 50}%`, right: `${(elapsedSeconds / 30) * 50}%` }}
       ></div>
 
-      <div className="flex sm:justify-center pl-8 sm:pl-0 w-full fixed bottom-0 left-0 right-0 pointer-events-none z-10 backdrop-blur-lg bg-slate-900 bg-opacity-30 pt-4">
+      <div className="flex sm:justify-center pl-8 sm:pl-0 fixed bottom-0 left-0 right-0 pointer-events-none z-10 backdrop-blur-lg bg-slate-900 bg-opacity-30 pt-4">
         <div className="w-16 h-16 p-1 mb-6">
           <CircularProgressbar
             value={remainingSeconds - 1}
