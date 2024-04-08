@@ -25,7 +25,6 @@ export function TokenCard({
   onEdit,
   setEditMode,
   editMode,
-  index,
 }: {
   data: Key;
   userRef: DocumentReference;
@@ -33,7 +32,6 @@ export function TokenCard({
   onEdit: () => void;
   setEditMode: (value: boolean) => void;
   editMode: boolean;
-  index: number;
 }) {
   const encryptionToken = useContext(CodeContext) || '';
   const [secret, setSecret] = useState('');
@@ -99,7 +97,7 @@ export function TokenCard({
         'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[97%] relative cursor-pointer transition-transform duration-1000 rotate-0' +
         (editMode ? ' animate-wiggle' : '')
       }
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{ animationDelay: `${Math.random() * 250}ms` }}
       {...bindPress()}
     >
       <div className="flex gap-4">

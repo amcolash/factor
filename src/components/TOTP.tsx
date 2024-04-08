@@ -60,11 +60,11 @@ export function TOTP({
               </svg>
             </div>
 
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {userData.keys
                 .filter((k) => search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase()))
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .map((key: Key, i: number) => {
+                .map((key: Key) => {
                   try {
                     return (
                       <TokenCard
@@ -78,7 +78,6 @@ export function TOTP({
                         }}
                         setEditMode={setEditMode}
                         editMode={editMode}
-                        index={i}
                       />
                     );
                   } catch (err) {
