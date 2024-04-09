@@ -25,7 +25,7 @@ export function QR({ close, onScan }: { close: () => void; onScan: (name: string
               close();
             } catch (err) {
               console.error(err);
-              toast.error('Failed to scan key');
+              toast.error('Failed to scan qr code');
             }
           }}
           onError={(error) => console.error(error?.message)}

@@ -78,8 +78,8 @@ export function TokenCard({
     () =>
       copy(token).then((result) => {
         if (result && token !== 'Token Error')
-          toast.success(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '' });
-        else toast.error('Failed to copy code');
+          toast.success(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '', autoClose: 2500 });
+        else toast.error('Failed to copy code', {autoClose: 2500});
       }),
     [token, data, isMobile, copy]
   );

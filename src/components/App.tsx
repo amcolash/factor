@@ -28,13 +28,13 @@ async function promptPin(token?: string): Promise<string | undefined> {
   let code = '';
   let tries = 0;
   while (code.length !== 6 && tries < 3) {
-    code = prompt('Enter 6 digit pin') || '';
+    code = prompt('Set a new 6 digit pin') || '';
     tries++;
   }
   if (code.length === 6) {
     const newCode = prompt('Re-enter 6 digit pin') || '';
     if (newCode !== code) {
-      toast.error('Pins do not match', { autoClose: 5000 });
+      toast.error('Pins do not match');
       return;
     }
   }

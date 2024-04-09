@@ -38,14 +38,7 @@ function Container() {
   return (
     <>
       <App />
-      <ToastContainer
-        theme="dark"
-        position="bottom-center"
-        transition={Zoom}
-        autoClose={1000}
-        hideProgressBar
-        closeButton={false}
-      />
+      <ToastContainer theme="dark" position="bottom-center" transition={Zoom} hideProgressBar closeButton={false} />
     </>
   );
 }

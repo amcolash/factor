@@ -126,6 +126,12 @@ export function TOTP({
             setEditKey(false);
             setKeyToEdit(undefined);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setEditKey(false);
+              setKeyToEdit(undefined);
+            }
+          }}
         >
           <div
             className="bg-slate-700 rounded-lg p-8 w-full"

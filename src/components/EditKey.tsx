@@ -1,7 +1,7 @@
 import { encrypt } from '@metamask/browser-passworder';
 import { DocumentReference, arrayRemove, arrayUnion, updateDoc } from 'firebase/firestore';
 import { useContext, useState } from 'react';
-import { FaQrcode, FaTimes } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaQrcode, FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { CodeContext } from '../contexts/CodeContext';
@@ -19,6 +19,7 @@ export function EditKey(props: EditKeyProps) {
   const [name, setName] = useState(props.name || '');
   const [secret, setSecret] = useState(props.secret || '');
   const [scan, setScan] = useState(false);
+  const [masked, setMasked] = useState(true);
 
   const token = useContext(CodeContext) || '';
 
@@ -39,6 +40,7 @@ export function EditKey(props: EditKeyProps) {
       await updateDoc(props.userRef, { keys: arrayUnion({ name, secret: encryptedSecret }) });
       setName('');
       setSecret('');
+      setMasked(true);
       props.close();
     } catch (err) {
       console.error(err);
@@ -72,13 +74,22 @@ export function EditKey(props: EditKeyProps) {
               autoComplete="false"
               type="text"
             />
-            <input
-              value={secret}
-              onChange={(e) => setSecret(e.target.value)}
-              placeholder="Secret"
-              autoComplete="false"
-              type="password"
-            />
+
+            <div className="relative">
+              <input
+                value={secret}
+                onChange={(e) => setSecret(e.target.value)}
+                placeholder="Secret"
+                autoComplete="false"
+                type={masked ? 'password' : 'text'}
+              />
+              <button
+                className="absolute right-0 top-0 bottom-0 flex items-center cursor-pointer bg-transparent"
+                onClick={() => setMasked(!masked)}
+              >
+                {masked ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
         </div>
 
