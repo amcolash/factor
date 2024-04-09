@@ -3,14 +3,14 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   -webkit-appearance: none;
-  background-color: WHITE;
+  background-color: #131314;
   background-image: none;
   border: 1px solid #747775;
   -webkit-border-radius: 4px;
   border-radius: 4px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  color: #1f1f1f;
+  color: #e3e3e3;
   cursor: pointer;
   font-family: 'Roboto', arial, sans-serif;
   font-size: 14px;
@@ -34,6 +34,7 @@
   width: auto;
   max-width: 400px;
   min-width: min-content;
+  border-color: #8e918f;
 }
 
 .gsi-material-button .gsi-material-button-icon {
@@ -80,8 +81,12 @@
 
 .gsi-material-button:disabled {
   cursor: default;
-  background-color: #ffffff61;
-  border-color: #1f1f1f1f;
+  background-color: #13131461;
+  border-color: #8e918f1f;
+}
+
+.gsi-material-button:disabled .gsi-material-button-state {
+  background-color: #e3e3e31f;
 }
 
 .gsi-material-button:disabled .gsi-material-button-contents {
@@ -94,7 +99,7 @@
 
 .gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
-  background-color: #303030;
+  background-color: white;
   opacity: 12%;
 }
 
@@ -108,6 +113,6 @@
 }
 
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
-  background-color: #303030;
+  background-color: white;
   opacity: 8%;
 }

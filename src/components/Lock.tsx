@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import { auth, db } from '../util/firebase';
 import { LogoPage } from './Logo';
 
+let unlocked = false;
+
 export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void; encryptedCode: string }) {
   const ref = useRef<HTMLInputElement[]>(null);
   const [signOut] = useSignOut(auth);
@@ -18,6 +20,7 @@ export function Lock({ unlock, encryptedCode }: { unlock: (code: string) => void
 
     if (process.env.NODE_ENV === 'development' && !unlocked) {
       onCodeEntered(import.meta.env.VITE_CODE);
+      unlocked = true;
     }
   }, []);
 
