@@ -24,7 +24,7 @@ export function App() {
   return <Authorized user={user} />;
 }
 
-async function promptCode(token?: string): Promise<string | undefined> {
+async function promptPin(token?: string): Promise<string | undefined> {
   let code = '';
   let tries = 0;
   while (code.length !== 6 && tries < 3) {
@@ -34,7 +34,7 @@ async function promptCode(token?: string): Promise<string | undefined> {
   if (code.length === 6) {
     const newCode = prompt('Re-enter 6 digit pin') || '';
     if (newCode !== code) {
-      toast.error('Codes do not match', { autoClose: 5000 });
+      toast.error('Pins do not match', { autoClose: 5000 });
       return;
     }
   }
@@ -73,18 +73,19 @@ function Authorized({ user }: { user: User }) {
 
   useEffect(() => {
     if (!loading && !error && value?.data() === undefined) {
-      promptCode().then((code) => {
+      promptPin().then((code) => {
         if (code) setDoc(userRef, { keys: [], email: user.email || '', code });
         else toast.error('Failed to create user');
       });
     }
   }, [value, loading, error]);
 
-  const updateCode = async () => {
-    const code = await promptCode(token);
+  const updatePin = async () => {
+    if (!confirm('Would you like to update your pin?')) return;
+    const code = await promptPin(token);
 
     if (code) updateDoc(userRef, { code });
-    else toast.error('Failed to update code');
+    else toast.error('Failed to update pin');
   };
 
   if (loading || error || !value || value.data() === undefined)
@@ -101,7 +102,7 @@ function Authorized({ user }: { user: User }) {
     <CodeContext.Provider value={token}>
       <Menu
         lock={() => setToken(undefined)}
-        updateCode={updateCode}
+        updateCode={updatePin}
         editMode={editMode}
         setEditKey={setEditKey}
         setEditMode={setEditMode}
