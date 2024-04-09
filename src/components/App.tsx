@@ -3,9 +3,11 @@ import { User } from 'firebase/auth';
 import { setDoc, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { FaBroadcastTower } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { CodeContext } from '../contexts/CodeContext';
+import { useOnline } from '../hooks/useOnline';
 import { useUserData } from '../hooks/useUserData';
 import { auth } from '../util/firebase';
 import { exportKeys, importKeys } from '../util/keys';
@@ -20,7 +22,12 @@ export function App() {
 
   if (loading || error) return <LogoPage>{error && <p>Error: {error.message}</p>}</LogoPage>;
 
-  if (!user) return <Login />;
+  if (!user)
+    return (
+      <LogoPage>
+        <Login />
+      </LogoPage>
+    );
   return <Authorized user={user} />;
 }
 
@@ -51,6 +58,18 @@ async function promptPin(token?: string): Promise<string | undefined> {
       console.error(err);
     }
   }
+}
+
+function OnlineStatus({ className }: { className?: string }) {
+  const online = useOnline();
+
+  if (online) return null;
+  return (
+    <FaBroadcastTower
+      className={'text-danger absolute top-2 right-2 text-2xl ' + className}
+      title="You are currently offline. It is not recommend to add/edit keys offline to avoid conflicts."
+    />
+  );
 }
 
 function Authorized({ user }: { user: User }) {
@@ -96,10 +115,17 @@ function Authorized({ user }: { user: User }) {
       </LogoPage>
     );
 
-  if (!token) return <Lock unlock={(code) => setToken(code)} encryptedCode={value.data()?.code!} />;
+  if (!token)
+    return (
+      <>
+        <OnlineStatus className="bottom-2 top-auto" />
+        <Lock unlock={(code) => setToken(code)} encryptedCode={value.data()?.code!} />
+      </>
+    );
 
   return (
     <CodeContext.Provider value={token}>
+      <OnlineStatus />
       <Menu
         lock={() => setToken(undefined)}
         updateCode={updatePin}
