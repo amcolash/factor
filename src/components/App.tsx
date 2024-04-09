@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { CodeContext } from '../contexts/CodeContext';
 import { useUserData } from '../hooks/useUserData';
 import { auth } from '../util/firebase';
+import { exportKeys, importKeys } from '../util/keys';
 import { Lock } from './Lock';
 import { Login } from './Login';
 import { LogoPage } from './Logo';
@@ -104,6 +105,8 @@ function Authorized({ user }: { user: User }) {
         editMode={editMode}
         setEditKey={setEditKey}
         setEditMode={setEditMode}
+        exportKeys={() => exportKeys(token, value.data()!)}
+        importKeys={() => importKeys(token, value.data()!)}
       />
       <TOTP
         userData={value.data()!}
