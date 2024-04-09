@@ -107,7 +107,7 @@ function Authorized({ user }: { user: User }) {
         setEditKey={setEditKey}
         setEditMode={setEditMode}
         exportKeys={() => exportKeys(token, value.data()!)}
-        importKeys={() => importKeys(token, value.data()!)}
+        importKeys={() => importKeys(token, value.data()!, userRef)}
       />
       <TOTP
         userData={value.data()!}
