@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { defineConfig } from 'vite';
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
+// @ts-ignore
+import { RuntimeCaching } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const KEY = join(__dirname, '/.cert/privkey.pem');
@@ -72,6 +74,38 @@ const manifest: Partial<ManifestOptions> = {
   ],
 };
 
+// Configuration to cache google fonts
+const runtimeCaching: RuntimeCaching[] = [
+  {
+    urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+    handler: 'CacheFirst',
+    options: {
+      cacheName: 'google-fonts-cache',
+      expiration: {
+        maxEntries: 10,
+        maxAgeSeconds: 60 * 60 * 24 * 365, // <== 365 days
+      },
+      cacheableResponse: {
+        statuses: [0, 200],
+      },
+    },
+  },
+  {
+    urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+    handler: 'CacheFirst',
+    options: {
+      cacheName: 'gstatic-fonts-cache',
+      expiration: {
+        maxEntries: 10,
+        maxAgeSeconds: 60 * 60 * 24 * 365, // <== 365 days
+      },
+      cacheableResponse: {
+        statuses: [0, 200],
+      },
+    },
+  },
+];
+
 export default defineConfig({
   base: '/factor/',
   build: {
@@ -106,6 +140,7 @@ export default defineConfig({
         // cache all imports
         globPatterns: ['**/*'],
         maximumFileSizeToCacheInBytes: 10 * 1000 * 1000, // 10mb
+        runtimeCaching,
       },
       // cache static assets in the public folder
       includeAssets: ['**/*'],
