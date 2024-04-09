@@ -79,7 +79,7 @@ export function TokenCard({
       copy(token).then((result) => {
         if (result && token !== 'Token Error')
           toast.success(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '', autoClose: 2500 });
-        else toast.error('Failed to copy code', {autoClose: 2500});
+        else toast.error('Failed to copy code', { autoClose: 2500 });
       }),
     [token, data, isMobile, copy]
   );
@@ -127,7 +127,7 @@ export function TokenCard({
         onClick={(e) => {
           e.stopPropagation();
 
-          const confirm = window.confirm('Are you sure you want to remove this token?');
+          const confirm = window.confirm(`Are you sure you want to remove ${name}? This cannot be undone!`);
           if (confirm) {
             const confirm2 = window.confirm('Are you really sure?');
             if (confirm2) updateDoc(userRef, { keys: arrayRemove(data) });

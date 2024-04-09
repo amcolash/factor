@@ -95,12 +95,7 @@ export function TOTP({
 
   return (
     <>
-      <div
-        className="fixed bottom-1 h-1.5 bg-primary transition-all duration-700 z-20 rounded"
-        style={{ left: `${(elapsedSeconds / 30) * 50}%`, right: `${(elapsedSeconds / 30) * 50}%` }}
-      ></div>
-
-      <div className="flex sm:justify-center pl-8 sm:pl-0 fixed bottom-0 left-0 right-0 z-10 backdrop-blur-lg bg-slate-900 bg-opacity-30 pt-4">
+      <div className="flex sm:justify-center pl-8 sm:pl-0 fixed bottom-0 left-0 right-0 z-10 backdrop-blur-lg bg-slate-900 bg-opacity-30 pt-4 border-t-2 border-secondary">
         <div className="w-16 h-16 p-1 mb-6">
           <CircularProgressbar
             value={remainingSeconds - 1}
@@ -115,6 +110,10 @@ export function TOTP({
             strokeWidth={10}
           />
         </div>
+        <div
+          className="fixed bottom-1 h-1.5 bg-primary transition-all duration-700 z-20 rounded"
+          style={{ left: `${(elapsedSeconds / 30) * 50}%`, right: `${(elapsedSeconds / 30) * 50}%` }}
+        ></div>
       </div>
 
       <div className="flex flex-col gap-4 m-6 sm:m-8 items-center pb-24">{tokens}</div>
