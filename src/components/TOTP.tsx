@@ -142,38 +142,6 @@ export function TOTP({
           />
         </Modal>
       )}
-
-      {/* {editKey && (
-        <div
-          className="fixed z-10 inset-0 bg-slate-900 bg-opacity-75 flex justify-center items-center"
-          onClick={() => {
-            setEditKey(false);
-            setKeyToEdit(undefined);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setEditKey(false);
-              setKeyToEdit(undefined);
-            }
-          }}
-        >
-          <div
-            className="bg-slate-700 rounded-lg p-8 w-full"
-            onClick={(e) => e.stopPropagation()}
-            style={{ marginTop: 'calc(-1 * env(keyboard-inset-height))', maxWidth: 'min(80vw, 600px)' }}
-          >
-            <EditKey
-              name={keyToEdit?.name}
-              secret={keyToEdit?.secret}
-              userRef={userRef}
-              close={() => {
-                setEditKey(false);
-                setKeyToEdit(undefined);
-              }}
-            />
-          </div>
-        </div>
-      )} */}
     </>
   );
 }
