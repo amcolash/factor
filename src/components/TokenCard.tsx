@@ -40,8 +40,8 @@ export function TokenCard({
   const [copy] = useCopyToClipboard();
 
   const onClick = () => {
-    if (hidden === HiddenType.Hidden) setHidden(HiddenType.FirstVisible);
-    else if (editMode) onEdit();
+    if (editMode) onEdit();
+    else if (hidden === HiddenType.Hidden) setHidden(HiddenType.FirstVisible);
     else copyToken();
   };
 

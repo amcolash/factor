@@ -1,8 +1,11 @@
+import { decrypt } from '@metamask/browser-passworder';
 import { DocumentReference } from 'firebase/firestore';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { toast } from 'react-toastify';
 
+import { CodeContext } from '../contexts/CodeContext';
 import { useRefreshTimer } from '../hooks/useRefreshTimer';
 import { useTailwind } from '../hooks/useTailwind';
 import { Key, UserData } from '../hooks/useUserData';
@@ -26,6 +29,7 @@ export function TOTP({
   setEditKey: (value: boolean) => void;
 }) {
   const { time, timestamp } = useRefreshTimer();
+  const encryptionToken = useContext(CodeContext) || '';
 
   const [search, setSearch] = useState('');
   const [keyToEdit, setKeyToEdit] = useState<Key>();
@@ -78,8 +82,20 @@ export function TOTP({
                         userRef={userRef}
                         timestamp={timestamp}
                         onEdit={() => {
-                          setEditKey(true);
-                          setKeyToEdit(key);
+                          const ref = toast.info('Decrypting token...', { autoClose: 1500 });
+                          decrypt(encryptionToken, key.secret)
+                            .then((decrypted) => {
+                              toast.dismiss(ref);
+
+                              setEditKey(true);
+                              setKeyToEdit({ name: key.name, secret: (decrypted as { secret: string }).secret });
+                            })
+                            .catch((err) => {
+                              toast.dismiss(ref);
+
+                              console.error(err);
+                              toast.error('Failed to decrypt token', { autoClose: 2500 });
+                            });
                         }}
                         setEditMode={setEditMode}
                         editMode={editMode}
