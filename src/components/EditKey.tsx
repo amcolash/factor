@@ -20,6 +20,7 @@ export function EditKey(props: EditKeyProps) {
   const [secret, setSecret] = useState(props.secret || '');
   const [scan, setScan] = useState(false);
   const [masked, setMasked] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
   const token = useContext(CodeContext) || '';
 
@@ -32,6 +33,8 @@ export function EditKey(props: EditKeyProps) {
     }
 
     try {
+      setUpdating(true);
+
       if (editing && (props.name !== name || props.secret !== secret)) {
         await updateDoc(props.userRef, { keys: arrayRemove({ name: props.name, secret: props.secret }) });
       }
@@ -45,6 +48,8 @@ export function EditKey(props: EditKeyProps) {
     } catch (err) {
       console.error(err);
       toast.error('Failed to add key');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -56,13 +61,6 @@ export function EditKey(props: EditKeyProps) {
           if (e.key === 'Enter') addKey(name, secret);
         }}
       >
-        <div className="flex items-center">
-          <h2 className="flex-1 text-lg font-medium">{editing ? 'Edit existing key' : 'Add a new key'}</h2>
-          <button onClick={props.close} className="px-2">
-            <FaTimes />
-          </button>
-        </div>
-
         <div className="flex gap-4 items-center">
           <AppIcon name={name} className="w-14 h-14 sm:w-16 sm:h-16" />
           <div className="flex flex-col gap-3 w-full">
@@ -99,8 +97,8 @@ export function EditKey(props: EditKeyProps) {
               <FaQrcode />
             </button>
           )}
-          <button onClick={() => addKey(name, secret)} className="flex-1">
-            {props.name || props.secret ? 'Save' : 'Add'}
+          <button onClick={() => addKey(name, secret)} className="flex-1" disabled={updating}>
+            {updating ? (editing ? 'Saving' : 'Adding') : editing ? 'Save' : 'Add'}
           </button>
         </div>
       </div>

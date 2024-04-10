@@ -7,6 +7,7 @@ import { useRefreshTimer } from '../hooks/useRefreshTimer';
 import { useTailwind } from '../hooks/useTailwind';
 import { Key, UserData } from '../hooks/useUserData';
 import { EditKey } from './EditKey';
+import { Modal } from './Modal';
 import { TokenCard } from './TokenCard';
 
 export function TOTP({
@@ -123,6 +124,26 @@ export function TOTP({
       <div className="flex flex-col gap-4 m-6 sm:m-8 items-center pb-24">{tokens}</div>
 
       {editKey && (
+        <Modal
+          title={keyToEdit?.name || keyToEdit?.secret ? 'Edit existing key' : 'Add a new key'}
+          onClose={() => {
+            setEditKey(false);
+            setKeyToEdit(undefined);
+          }}
+        >
+          <EditKey
+            name={keyToEdit?.name}
+            secret={keyToEdit?.secret}
+            userRef={userRef}
+            close={() => {
+              setEditKey(false);
+              setKeyToEdit(undefined);
+            }}
+          />
+        </Modal>
+      )}
+
+      {/* {editKey && (
         <div
           className="fixed z-10 inset-0 bg-slate-900 bg-opacity-75 flex justify-center items-center"
           onClick={() => {
@@ -152,7 +173,7 @@ export function TOTP({
             />
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

@@ -39,14 +39,16 @@ export function TokenCard({
   const isMobile = useIsMobile();
   const [copy] = useCopyToClipboard();
 
+  const onClick = () => {
+    if (hidden === HiddenType.Hidden) setHidden(HiddenType.FirstVisible);
+    else if (editMode) onEdit();
+    else copyToken();
+  };
+
   const bindPress = useLongPress(() => setEditMode(true), {
     threshold: 600,
     onCancel: (e, { reason }) => {
-      if (reason === LongPressCallbackReason.CancelledByRelease) {
-        if (hidden === HiddenType.Hidden) setHidden(HiddenType.FirstVisible);
-        else if (editMode) onEdit();
-        else copyToken();
-      }
+      if (reason === LongPressCallbackReason.CancelledByRelease) onClick();
     },
   });
 
@@ -94,11 +96,15 @@ export function TokenCard({
   return (
     <div
       className={
-        'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[97%] relative cursor-pointer transition-transform duration-1000 rotate-0' +
+        'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[90%] relative cursor-pointer transition-all rotate-0' +
         (editMode ? ' animate-wiggle' : '')
       }
       style={{ animationDelay: `${Math.random() * 250}ms` }}
+      tabIndex={0}
       {...bindPress()}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onClick();
+      }}
     >
       <div className="flex gap-4">
         <AppIcon name={data.name} />
@@ -124,10 +130,11 @@ export function TokenCard({
       <button
         className="absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white hover:brightness-100 sm:hover:bg-danger transition-all duration-300"
         style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
+        tabIndex={editMode ? 0 : -1}
         onClick={(e) => {
           e.stopPropagation();
 
-          const confirm = window.confirm(`Are you sure you want to remove ${name}? This cannot be undone!`);
+          const confirm = window.confirm(`Are you sure you want to remove ${data.name}? This cannot be undone!`);
           if (confirm) {
             const confirm2 = window.confirm('Are you really sure?');
             if (confirm2) updateDoc(userRef, { keys: arrayRemove(data) });

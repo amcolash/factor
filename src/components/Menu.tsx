@@ -19,6 +19,7 @@ export function Menu({
   importKeys: () => void;
 }) {
   const buttonClass = 'p-4 rounded-full';
+  const buttonColor = buttonClass + ' !bg-slate-800 !text-primary';
 
   const bindLock = useLongPress(updateCode, {
     threshold: 600,
@@ -51,22 +52,15 @@ export function Menu({
     <div className="fixed bottom-8 right-8 flex gap-4 z-20">
       {editMode && (
         <>
-          <button className={buttonClass + ' !bg-slate-800 !text-primary'} onClick={() => importKeys()}>
+          <button className={buttonColor} onClick={() => importKeys()}>
             <FaUpload />
           </button>
-          <button className={buttonClass + ' !bg-slate-800 !text-primary mr-4'} onClick={() => exportKeys()}>
+          <button className={buttonColor + ' mr-4'} onClick={() => exportKeys()}>
             <FaSave />
           </button>
         </>
       )}
-      <button
-        className={
-          buttonClass +
-          ' !bg-slate-800 !text-primary outline outline-primary outline-2 -outline-offset-2' +
-          (editMode ? ' rotate-45' : '')
-        }
-        {...bindPlus()}
-      >
+      <button className={buttonColor + (editMode ? ' rotate-45' : '')} {...bindPlus()}>
         <FaPlus />
       </button>
       <button className={'transition-transform ' + buttonClass} {...bindLock()}>
