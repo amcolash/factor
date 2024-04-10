@@ -1,5 +1,5 @@
 import { DocumentReference } from 'firebase/firestore';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -33,6 +33,10 @@ export function TOTP({
   const remainingMs = 30000 - (time.getTime() % 30000);
   const remainingSeconds = Math.ceil(remainingMs / 1000);
   const elapsedSeconds = 30 - remainingSeconds;
+
+  useEffect(() => {
+    if (editMode && navigator.vibrate) navigator.vibrate(200);
+  }, [editMode]);
 
   const tokens = useMemo(
     () => (

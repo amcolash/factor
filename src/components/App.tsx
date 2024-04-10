@@ -66,7 +66,7 @@ function OnlineStatus({ className }: { className?: string }) {
   if (online) return null;
   return (
     <FaBroadcastTower
-      className={'text-danger absolute top-2 right-2 text-2xl ' + className}
+      className={'text-danger fixed top-2 right-2 text-2xl z-10 ' + className}
       title="You are currently offline. It is not recommend to add/edit keys offline to avoid conflicts."
     />
   );
@@ -118,7 +118,7 @@ function Authorized({ user }: { user: User }) {
   if (!token)
     return (
       <>
-        <OnlineStatus className="bottom-2 top-auto" />
+        <OnlineStatus className="!bottom-4 !right-5 top-auto" />
         <Lock unlock={(code) => setToken(code)} encryptedCode={value.data()?.code!} />
       </>
     );
