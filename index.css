@@ -28,7 +28,7 @@ h1 {
     outline-color 0.25s;
 }
 
-:focus {
+:focus-visible {
   @apply outline-4 outline-primary;
 }
 

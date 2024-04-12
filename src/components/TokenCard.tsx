@@ -45,7 +45,7 @@ export function TokenCard({
     else copyToken();
   };
 
-  const bindPress = useLongPress(() => setEditMode(true), {
+  const bindPress = useLongPress(() => setEditMode(!editMode), {
     threshold: 600,
     onCancel: (e, { reason }) => {
       if (reason === LongPressCallbackReason.CancelledByRelease) onClick();
