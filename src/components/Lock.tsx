@@ -6,6 +6,7 @@ import { FaFingerprint, FaSignOutAlt } from 'react-icons/fa';
 import PinField from 'react-pin-field';
 import { toast } from 'react-toastify';
 
+import { useUUID } from '../hooks/useUUID';
 import { UserData } from '../hooks/useUserData';
 import { auth, db } from '../util/firebase';
 import { authenticate, register } from '../util/webauthn';
@@ -26,8 +27,9 @@ export function Lock({
 }) {
   const ref = useRef<HTMLInputElement[]>(null);
   const [signOut] = useSignOut(auth);
+  const uuid = useUUID();
 
-  const webauthn = data?.webauthn?.find((a) => a.uuid === auth.currentUser?.uid);
+  const webauthn = data?.webauthn?.find((a) => a.uuid === uuid);
 
   useEffect(() => {
     setTimeout(() => ref.current?.[0].focus(), 250);
@@ -72,11 +74,12 @@ export function Lock({
       updateDoc(userRef, {
         webauthn: arrayUnion({
           credentialId: credential?.credentialId,
-          uuid: auth.currentUser?.uid,
+          uuid,
           secret: encryptedSecret,
         }),
       });
 
+      unlocked = true;
       toast.success('Successfully enrolled biometric login');
     } catch (err) {
       console.error(err);
@@ -137,7 +140,7 @@ export function Lock({
         />
       </div>
 
-      {webauthn ? (
+      {navigator.credentials && webauthn ? (
         <button
           className="p-3 rounded-full bg-slate-900 bg-opacity-75 border-2 border-slate-600"
           onClick={async (e) => {
@@ -149,7 +152,7 @@ export function Lock({
         </button>
       ) : (
         <button
-          className="p-3 rounded-full bg-slate-900 bg-opacity-75 border-2 border-slate-600"
+          className="p-3 rounded-full bg-tertiary bg-opacity-75 border-2 border-slate-600"
           onClick={async (e) => {
             e.stopPropagation();
             biometricRegister();
