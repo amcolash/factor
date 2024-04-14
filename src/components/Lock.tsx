@@ -6,6 +6,7 @@ import { FaFingerprint, FaSignOutAlt } from 'react-icons/fa';
 import PinField from 'react-pin-field';
 import { toast } from 'react-toastify';
 
+import { OS, useOsType } from '../hooks/useOsType';
 import { useUUID } from '../hooks/useUUID';
 import { UserData } from '../hooks/useUserData';
 import { auth, db } from '../util/firebase';
@@ -28,16 +29,19 @@ export function Lock({
   const ref = useRef<HTMLInputElement[]>(null);
   const [signOut] = useSignOut(auth);
   const uuid = useUUID();
+  const os = useOsType();
 
+  // TODO: Figure out a better way to determine when to show webauthn button
+  const webauthnEnabled = navigator.credentials && (os === OS.Android || os === OS.iOS || os === OS.Mac);
   const webauthn = data?.webauthn?.find((a) => a.uuid === uuid);
 
   useEffect(() => {
     setTimeout(() => ref.current?.[0].focus(), 250);
 
-    // if (process.env.NODE_ENV === 'development' && !unlocked) {
-    //   onCodeEntered(import.meta.env.VITE_CODE);
-    //   unlocked = true;
-    // }
+    if (process.env.NODE_ENV === 'development' && !unlocked) {
+      onCodeEntered(import.meta.env.VITE_CODE);
+      unlocked = true;
+    }
   }, []);
 
   useEffect(() => {
@@ -140,27 +144,28 @@ export function Lock({
         />
       </div>
 
-      {navigator.credentials && webauthn ? (
-        <button
-          className="p-3 rounded-full bg-slate-900 bg-opacity-75 border-2 border-slate-600"
-          onClick={async (e) => {
-            e.stopPropagation();
-            biometricLogin();
-          }}
-        >
-          <FaFingerprint size={30} />
-        </button>
-      ) : (
-        <button
-          className="p-3 rounded-full bg-tertiary bg-opacity-75 border-2 border-slate-600"
-          onClick={async (e) => {
-            e.stopPropagation();
-            biometricRegister();
-          }}
-        >
-          <FaFingerprint size={30} />
-        </button>
-      )}
+      {webauthnEnabled &&
+        (webauthn ? (
+          <button
+            className="p-3 rounded-full bg-slate-900 bg-opacity-75 border-2 border-slate-600"
+            onClick={async (e) => {
+              e.stopPropagation();
+              biometricLogin();
+            }}
+          >
+            <FaFingerprint size={30} />
+          </button>
+        ) : (
+          <button
+            className="p-3 rounded-full bg-tertiary bg-opacity-75 border-2 border-slate-600"
+            onClick={async (e) => {
+              e.stopPropagation();
+              biometricRegister();
+            }}
+          >
+            <FaFingerprint size={30} />
+          </button>
+        ))}
     </LogoPage>
   );
 }
