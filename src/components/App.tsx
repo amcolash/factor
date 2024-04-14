@@ -93,7 +93,7 @@ function Authorized({ user }: { user: User }) {
   useEffect(() => {
     if (!loading && !error && value?.data() === undefined) {
       promptPin().then((code) => {
-        if (code) setDoc(userRef, { keys: [], email: user.email || '', code });
+        if (code) setDoc(userRef, { keys: [], email: user.email || '', code, webauthn: [] });
         else toast.error('Failed to create user');
       });
     }
@@ -119,7 +119,12 @@ function Authorized({ user }: { user: User }) {
     return (
       <>
         <OnlineStatus className="!bottom-4 !right-5 top-auto" />
-        <Lock unlock={(code) => setToken(code)} encryptedCode={value.data()?.code!} />
+        <Lock
+          unlock={(code) => setToken(code)}
+          encryptedCode={value.data()?.code!}
+          data={value.data()}
+          userRef={userRef}
+        />
       </>
     );
 

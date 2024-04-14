@@ -8,6 +8,13 @@ export interface UserData {
   email: string;
   keys: Key[];
   code: string;
+  webauthn: Auth[];
+}
+
+export interface Auth {
+  credentialId: string;
+  uuid: string;
+  secret: string;
 }
 
 export interface Key {
