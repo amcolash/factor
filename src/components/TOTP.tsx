@@ -114,6 +114,10 @@ export function TOTP({
     [userData.keys, search, timestamp, userRef, editMode]
   );
 
+  // Originally, this was: const progressOffset = (elapsedSeconds / 30) * 50;
+  // These magic number make things look good at the start / end points
+  const progressOffset = ((elapsedSeconds + 0.15) / 29.4) * 50;
+
   return (
     <>
       <div className="flex sm:justify-center pl-8 sm:pl-0 fixed bottom-0 left-0 right-0 z-10 backdrop-blur-lg bg-slate-900 bg-opacity-30 pt-4 border-t-2 border-secondary">
@@ -133,7 +137,7 @@ export function TOTP({
         </div>
         <div
           className="fixed bottom-1 h-1.5 bg-primary transition-all duration-700 z-20 rounded"
-          style={{ left: `${(elapsedSeconds / 30) * 50}%`, right: `${(elapsedSeconds / 30) * 50}%` }}
+          style={{ left: `${progressOffset}%`, right: `${progressOffset}%` }}
         ></div>
       </div>
 
