@@ -18,6 +18,10 @@ export function LogoPage({
       <h1 className="text-center m-0 -mb-1">Factor</h1>
       <Logo className={className} />
       {children}
+
+      <span className="text-[9px] absolute bottom-1.5 right-1.5 whitespace-pre text-right">
+        {new Date(__BUILD_TIME__).toLocaleString().replace(', ', '\n')}
+      </span>
     </div>
   );
 }

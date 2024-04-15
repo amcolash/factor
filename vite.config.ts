@@ -128,6 +128,9 @@ export default defineConfig({
     },
     sourcemap: true,
   },
+  define: {
+    __BUILD_TIME__: new Date(),
+  },
   server: {
     host: true,
     https,
