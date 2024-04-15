@@ -19,7 +19,7 @@ export function LogoPage({
       <Logo className={className} />
       {children}
 
-      <span className="text-[9px] absolute bottom-1.5 right-1.5 whitespace-pre text-right">
+      <span className="text-[8px] absolute bottom-1.5 right-1.5 whitespace-pre text-right">
         {new Date(__BUILD_TIME__).toLocaleString().replace(', ', '\n')}
       </span>
     </div>

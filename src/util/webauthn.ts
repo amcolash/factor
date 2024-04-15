@@ -1,4 +1,5 @@
 // A large portion of this code was written by chatgpt
+import { auth } from './firebase';
 
 const challenge = Uint8Array.from(window.crypto.getRandomValues(new Uint8Array(32)));
 
@@ -10,6 +11,7 @@ export interface Credential {
 export async function register(): Promise<Credential | null> {
   try {
     const userHandle = Uint8Array.from(window.crypto.getRandomValues(new Uint8Array(32)));
+    const currentUser = auth.currentUser;
     const publicKey: PublicKeyCredentialCreationOptions = {
       challenge, // Not really necessary since this is 100% local
       rp: {
@@ -17,8 +19,8 @@ export async function register(): Promise<Credential | null> {
       },
       user: {
         id: userHandle, // This is both our userid, but also our encryption secret
-        name: 'user',
-        displayName: 'User',
+        name: currentUser?.email || 'user@email.com',
+        displayName: currentUser?.displayName || 'User',
       },
 
       pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
