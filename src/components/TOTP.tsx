@@ -40,6 +40,13 @@ export function TOTP({
   const elapsedSeconds = 30 - remainingSeconds;
 
   useEffect(() => {
+    return () => {
+      setEditMode(false);
+      setEditKey(false);
+    };
+  }, []);
+
+  useEffect(() => {
     if (editMode && navigator.vibrate) navigator.vibrate(200);
   }, [editMode]);
 

@@ -15,6 +15,7 @@ export interface Auth {
   credentialId: string;
   uuid: string;
   secret: string;
+  userAgent: string;
 }
 
 export interface Key {

@@ -1,10 +1,18 @@
 import { decrypt, encrypt } from '@metamask/browser-passworder';
-import { DocumentReference, arrayUnion, clearIndexedDbPersistence, terminate, updateDoc } from 'firebase/firestore';
+import {
+  DocumentReference,
+  arrayRemove,
+  arrayUnion,
+  clearIndexedDbPersistence,
+  terminate,
+  updateDoc,
+} from 'firebase/firestore';
 import { useEffect, useRef } from 'react';
 import { useSignOut } from 'react-firebase-hooks/auth';
 import { FaFingerprint, FaSignOutAlt } from 'react-icons/fa';
 import PinField from 'react-pin-field';
 import { toast } from 'react-toastify';
+import { LongPressCallbackReason, useLongPress } from 'use-long-press';
 
 import { OS, useOsType } from '../hooks/useOsType';
 import { useUUID } from '../hooks/useUUID';
@@ -32,15 +40,17 @@ export function Lock({
   const os = useOsType();
 
   // TODO: Figure out a better way to determine when to show webauthn button
-  const webauthnEnabled = navigator.credentials && (os === OS.Android || os === OS.iOS || os === OS.Mac);
+  const webauthnEnabled =
+    navigator.credentials &&
+    (os === OS.Android || os === OS.iOS || os === OS.Mac || process.env.NODE_ENV === 'development');
   const webauthn = data?.webauthn?.find((a) => a.uuid === uuid);
 
   useEffect(() => {
     setTimeout(() => ref.current?.[0].focus(), 250);
 
     if (process.env.NODE_ENV === 'development' && !unlocked) {
-      onCodeEntered(import.meta.env.VITE_CODE);
-      unlocked = true;
+      // onCodeEntered(import.meta.env.VITE_CODE);
+      // unlocked = true;
     }
   }, []);
 
@@ -50,6 +60,24 @@ export function Lock({
       unlocked = true;
     }
   }, [webauthn]);
+
+  const bindHold = useLongPress(
+    () => {
+      if (webauthn && confirm('Reset Biometric Auth?')) {
+        updateDoc(userRef, {
+          webauthn: arrayRemove({ ...webauthn }),
+        });
+      }
+    },
+    {
+      threshold: 3000,
+      onCancel: (e, { reason }) => {
+        if (reason === LongPressCallbackReason.CancelledByRelease) {
+          biometricLogin();
+        }
+      },
+    }
+  );
 
   const biometricLogin = async () => {
     try {
@@ -80,6 +108,7 @@ export function Lock({
           credentialId: credential?.credentialId,
           uuid,
           secret: encryptedSecret,
+          userAgent: navigator.userAgent,
         }),
       });
 
@@ -112,8 +141,9 @@ export function Lock({
 
   return (
     <LogoPage
-      onClick={() => {
-        if (ref.current) ref.current[0].focus();
+      onClick={(e: any) => {
+        const node = e.target?.nodeName;
+        if (ref.current && (node === 'DIV' || node === 'IMG' || node === 'H1')) ref.current[0].focus();
       }}
       style={{ marginTop: 'calc(-1 * env(keyboard-inset-height) / 2)' }}
     >
@@ -124,6 +154,8 @@ export function Lock({
             await signOut();
             await terminate(db);
             await clearIndexedDbPersistence(db);
+
+            window.location.reload();
           } catch (err) {
             console.error(err);
           }
@@ -140,28 +172,18 @@ export function Lock({
           inputMode="numeric"
           ref={ref}
           onComplete={onCodeEntered}
-          onClick={(e) => e.stopPropagation()}
         />
       </div>
 
       {webauthnEnabled &&
         (webauthn ? (
-          <button
-            className="p-3 rounded-full bg-slate-900 bg-opacity-75 border-2 border-slate-600"
-            onClick={async (e) => {
-              e.stopPropagation();
-              biometricLogin();
-            }}
-          >
+          <button className="p-3 rounded-full bg-slate-900 bg-opacity-75 border-2 border-slate-600" {...bindHold()}>
             <FaFingerprint size={30} />
           </button>
         ) : (
           <button
             className="p-3 rounded-full bg-tertiary bg-opacity-75 border-2 border-slate-600"
-            onClick={async (e) => {
-              e.stopPropagation();
-              biometricRegister();
-            }}
+            onClick={biometricRegister}
           >
             <FaFingerprint size={30} />
           </button>
