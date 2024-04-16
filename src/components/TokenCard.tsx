@@ -4,11 +4,11 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { TOTP } from 'totp-generator';
-import { LongPressCallbackReason, useLongPress } from 'use-long-press';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { useCopyToClipboard } from '../hooks/useCopyToClipboard';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { useOnHold } from '../hooks/useOnHold';
 import { Key } from '../hooks/useUserData';
 import { AppIcon } from './AppIcon';
 
@@ -45,12 +45,7 @@ export function TokenCard({
     else copyToken();
   };
 
-  const bindPress = useLongPress(() => setEditMode(!editMode), {
-    threshold: 600,
-    onCancel: (e, { reason }) => {
-      if (reason === LongPressCallbackReason.CancelledByRelease) onClick();
-    },
-  });
+  const bindHold = useOnHold(() => setEditMode(!editMode), onClick);
 
   useEffect(() => {
     if (hidden === HiddenType.Hidden) return;
@@ -101,7 +96,7 @@ export function TokenCard({
       }
       style={{ animationDelay: `${Math.random() * 250}ms` }}
       tabIndex={0}
-      {...bindPress()}
+      {...bindHold()}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') onClick();
       }}

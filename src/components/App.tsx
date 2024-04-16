@@ -131,6 +131,14 @@ function Authorized({ user }: { user: User }) {
   return (
     <CodeContext.Provider value={token}>
       <OnlineStatus />
+      <TOTP
+        userData={value.data()!}
+        userRef={userRef}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        editKey={editKey}
+        setEditKey={setEditKey}
+      />
       <Menu
         lock={() => setToken(undefined)}
         updateCode={updatePin}
@@ -139,14 +147,6 @@ function Authorized({ user }: { user: User }) {
         setEditMode={setEditMode}
         exportKeys={() => exportKeys(token, value.data()!)}
         importKeys={() => importKeys(token, value.data()!, userRef)}
-      />
-      <TOTP
-        userData={value.data()!}
-        userRef={userRef}
-        editMode={editMode}
-        setEditMode={setEditMode}
-        editKey={editKey}
-        setEditKey={setEditKey}
       />
     </CodeContext.Provider>
   );

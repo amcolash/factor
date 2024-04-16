@@ -12,8 +12,8 @@ import { useSignOut } from 'react-firebase-hooks/auth';
 import { FaFingerprint, FaSignOutAlt } from 'react-icons/fa';
 import PinField from 'react-pin-field';
 import { toast } from 'react-toastify';
-import { LongPressCallbackReason, useLongPress } from 'use-long-press';
 
+import { useOnHold } from '../hooks/useOnHold';
 import { OS, useOsType } from '../hooks/useOsType';
 import { useUUID } from '../hooks/useUUID';
 import { UserData } from '../hooks/useUserData';
@@ -61,7 +61,7 @@ export function Lock({
     }
   }, [webauthn]);
 
-  const bindHold = useLongPress(
+  const bindHold = useOnHold(
     () => {
       if (webauthn && confirm('Reset Biometric Auth?')) {
         updateDoc(userRef, {
@@ -69,14 +69,8 @@ export function Lock({
         });
       }
     },
-    {
-      threshold: 3000,
-      onCancel: (e, { reason }) => {
-        if (reason === LongPressCallbackReason.CancelledByRelease) {
-          biometricLogin();
-        }
-      },
-    }
+    () => biometricLogin(),
+    3000
   );
 
   const biometricLogin = async () => {
