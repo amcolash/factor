@@ -1,5 +1,4 @@
 import { FaTimes } from 'react-icons/fa';
-import { jsx } from 'react/jsx-runtime';
 
 export function Modal({
   onClose,

@@ -39,10 +39,14 @@ export function Lock({
   const uuid = useUUID();
   const os = useOsType();
 
+  // For now, always have option to sign up with webauthn
+  const webauthnEnabled = true;
+
+  // const devEnabled = true;
   // TODO: Figure out a better way to determine when to show webauthn button
-  const webauthnEnabled =
-    navigator.credentials &&
-    (os === OS.Android || os === OS.iOS || os === OS.Mac || process.env.NODE_ENV === 'development');
+  // const webauthnEnabled =
+  //   navigator.credentials &&
+  //   (os === OS.Android || os === OS.iOS || os === OS.Mac || (devEnabled && process.env.NODE_ENV === 'development'));
   const webauthn = data?.webauthn?.find((a) => a.uuid === uuid);
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export function Lock({
   }, []);
 
   useEffect(() => {
-    if (webauthn && !unlocked) {
+    if (webauthn && webauthnEnabled && !unlocked) {
       biometricLogin();
       unlocked = true;
     }
@@ -141,22 +145,30 @@ export function Lock({
       }}
       style={{ marginTop: 'calc(-1 * env(keyboard-inset-height) / 2)' }}
     >
-      <button
-        className="icon fixed top-4 right-4 bg-danger"
-        onClick={async () => {
-          try {
-            await signOut();
-            await terminate(db);
-            await clearIndexedDbPersistence(db);
+      <div className="flex fixed top-4 right-4 gap-2">
+        {webauthnEnabled && !webauthn && (
+          <button className="icon bg-primary text-slate-200" onClick={biometricRegister}>
+            <FaFingerprint />
+          </button>
+        )}
 
-            window.location.reload();
-          } catch (err) {
-            console.error(err);
-          }
-        }}
-      >
-        <FaSignOutAlt />
-      </button>
+        <button
+          className="icon bg-danger"
+          onClick={async () => {
+            try {
+              await signOut();
+              await terminate(db);
+              await clearIndexedDbPersistence(db);
+
+              window.location.reload();
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+        >
+          <FaSignOutAlt />
+        </button>
+      </div>
 
       <div className="flex mb-6">
         <PinField
@@ -169,19 +181,11 @@ export function Lock({
         />
       </div>
 
-      {webauthnEnabled &&
-        (webauthn ? (
-          <button className="p-3 rounded-full bg-slate-900 bg-opacity-75 border-2 border-slate-600" {...bindHold()}>
-            <FaFingerprint size={30} />
-          </button>
-        ) : (
-          <button
-            className="p-3 rounded-full bg-tertiary bg-opacity-75 border-2 border-slate-600"
-            onClick={biometricRegister}
-          >
-            <FaFingerprint size={30} />
-          </button>
-        ))}
+      {webauthnEnabled && webauthn && (
+        <button className="p-3 rounded-full bg-tertiary text-slate-200 border-2 border-slate-600" {...bindHold()}>
+          <FaFingerprint size={30} />
+        </button>
+      )}
     </LogoPage>
   );
 }
