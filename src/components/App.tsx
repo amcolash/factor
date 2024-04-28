@@ -9,13 +9,14 @@ import { toast } from 'react-toastify';
 import { CodeContext } from '../contexts/CodeContext';
 import { useOnline } from '../hooks/useOnline';
 import { useUserData } from '../hooks/useUserData';
+import { useVisibilityChange } from '../hooks/useVisibilityChange';
 import { auth } from '../util/firebase';
 import { exportKeys, importKeys } from '../util/keys';
-import { Lock } from './Lock';
+import { Lock } from './Lock/Lock';
 import { Login } from './Login';
 import { LogoPage } from './Logo';
 import { Menu } from './Menu';
-import { TOTP } from './TOTP';
+import { TokenList } from './TokenList';
 
 export function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -79,16 +80,9 @@ function Authorized({ user }: { user: User }) {
   const [editMode, setEditMode] = useState(false);
   const [editKey, setEditKey] = useState(false);
 
-  useEffect(() => {
-    const listener = () => {
-      if (document.visibilityState === 'visible') {
-        setToken(undefined);
-      }
-    };
-
-    document.addEventListener('visibilitychange', listener);
-    return () => document.removeEventListener('visibilitychange', listener);
-  }, []);
+  useVisibilityChange((visible) => {
+    if (!visible) setToken(undefined);
+  });
 
   useEffect(() => {
     if (!loading && !error && value?.data() === undefined) {
@@ -131,7 +125,7 @@ function Authorized({ user }: { user: User }) {
   return (
     <CodeContext.Provider value={token}>
       <OnlineStatus />
-      <TOTP
+      <TokenList
         userData={value.data()!}
         userRef={userRef}
         editMode={editMode}

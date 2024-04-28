@@ -14,7 +14,7 @@ import { EditKey } from './EditKey';
 import { Modal } from './Modal';
 import { TokenCard } from './TokenCard';
 
-export function TOTP({
+export function TokenList({
   userData,
   userRef,
   editMode,
