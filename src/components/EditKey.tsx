@@ -1,7 +1,7 @@
 import { encrypt } from '@metamask/browser-passworder';
 import { DocumentReference, arrayRemove, arrayUnion, updateDoc } from 'firebase/firestore';
 import { useContext, useState } from 'react';
-import { FaEye, FaEyeSlash, FaQrcode, FaTimes } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaQrcode } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { CodeContext } from '../contexts/CodeContext';

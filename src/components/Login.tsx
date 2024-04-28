@@ -1,4 +1,3 @@
-import { ComponentProps, HTMLAttributes } from 'react';
 import { useAuthState, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 
 import { auth } from '../util/firebase';
