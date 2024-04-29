@@ -48,7 +48,7 @@ export function Lock({
         <Logout />
       </div>
 
-      <PinCode ref={pinRef} encryptedCode={encryptedCode} unlock={unlock} />
+      <PinCode pinRef={pinRef} encryptedCode={encryptedCode} unlock={unlock} />
 
       {webauthnEnabled && webauthn && <WebauthnLogin unlock={unlock} userRef={userRef} webauthn={webauthn} />}
     </LogoPage>

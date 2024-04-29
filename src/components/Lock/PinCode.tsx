@@ -5,12 +5,12 @@ import { toast } from 'react-toastify';
 
 let unlocked = false;
 export function PinCode({
-  ref,
+  pinRef,
   encryptedCode,
   unlock,
   className,
 }: {
-  ref: React.RefObject<HTMLInputElement[]>;
+  pinRef: React.RefObject<HTMLInputElement[]>;
   encryptedCode: string;
   unlock: (code: string) => void;
   className?: string;
@@ -20,7 +20,7 @@ export function PinCode({
       onCodeEntered(import.meta.env.VITE_CODE);
       unlocked = true;
     } else {
-      setTimeout(() => ref.current?.[0].focus(), 250);
+      setTimeout(() => pinRef.current?.[0].focus(), 250);
     }
   }, []);
 
@@ -35,11 +35,11 @@ export function PinCode({
       }
     }
 
-    if (ref.current) {
-      ref.current.forEach((input) => {
+    if (pinRef.current) {
+      pinRef.current.forEach((input) => {
         input.value = '';
       });
-      ref.current[0].focus();
+      pinRef.current[0].focus();
     }
   };
 
@@ -50,7 +50,7 @@ export function PinCode({
         className="border border-slate-500 w-10 sm:w-12 h-14 m-1.5 rounded-lg text-center text-6xl p-1"
         type="password"
         inputMode="numeric"
-        ref={ref}
+        ref={pinRef}
         onComplete={onCodeEntered}
       />
     </div>
