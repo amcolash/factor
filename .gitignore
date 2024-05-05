@@ -4,3 +4,5 @@ dist
 .cert
 .env
 .DS_Store
+dev-dist
+factor

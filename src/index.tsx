@@ -24,7 +24,7 @@ if (nav.virtualKeyboard) nav.virtualKeyboard.overlaysContent = true;
 // add this to prompt for a refresh
 const updateSW = registerSW({
   onNeedRefresh() {
-    toast.warn('New version available, tap to update.', {
+    toast.warn('New version installed, tap to update.', {
       autoClose: false,
       onClick: () => {
         updateSW();
@@ -32,6 +32,22 @@ const updateSW = registerSW({
       },
       closeOnClick: true,
     });
+  },
+  onRegistered(r) {
+    // try to update every 5 minutes
+    if (r) {
+      setInterval(
+        () => {
+          r.update();
+        },
+        5 * 60 * 1000
+      );
+
+      // TODO: Test that this works
+      r.addEventListener('updatefound', () => {
+        toast.info('Downloading new version...');
+      });
+    }
   },
 });
 

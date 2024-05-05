@@ -1,10 +1,11 @@
 import { decrypt } from '@metamask/browser-passworder';
 import { DocumentReference, arrayRemove, updateDoc } from 'firebase/firestore';
+import { useEffect } from 'react';
 import { FaFingerprint } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { useOnHold } from '../../hooks/useOnHold';
-import { UserData } from '../../hooks/useUserData';
+import { Auth, UserData } from '../../hooks/useUserData';
 import { useVisibilityChange } from '../../hooks/useVisibilityChange';
 import { authenticate } from '../../util/webauthn';
 
@@ -13,13 +14,18 @@ export function WebauthnLogin({
   userRef,
   unlock,
 }: {
-  webauthn: UserData['webauthn'][0];
+  webauthn: Auth;
   userRef: DocumentReference;
   unlock: (code: string) => void;
 }) {
   useVisibilityChange((visible) => {
     if (visible && webauthn) biometricLogin();
   });
+
+  // Attempt to login with biometric auth on startup
+  useEffect(() => {
+    if (webauthn) biometricLogin();
+  }, []);
 
   const bindHold = useOnHold(
     () => {

@@ -1,7 +1,7 @@
 import { DocumentReference } from 'firebase/firestore';
 import { useRef } from 'react';
 
-import { OS, useOsType } from '../../hooks/useOsType';
+// import { OS, useOsType } from '../../hooks/useOsType';
 import { useUUID } from '../../hooks/useUUID';
 import { UserData } from '../../hooks/useUserData';
 import { LogoPage } from '../Logo';
@@ -23,7 +23,7 @@ export function Lock({
 }) {
   const pinRef = useRef<HTMLInputElement[]>(null);
   const uuid = useUUID();
-  const os = useOsType();
+  // const os = useOsType();
 
   // For now, always have option to sign up with webauthn
   const webauthnEnabled = true;
