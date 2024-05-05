@@ -30,44 +30,4 @@ function Container() {
   );
 }
 
-function onLoad() {
-  // keep track of updating toast
-  let updateToast: Id;
-
-  // add this to prompt for a refresh
-  const updateSW = registerSW({
-    onNeedRefresh() {
-      if (updateToast) toast.dismiss(updateToast);
-
-      updateToast = toast.warn('New version installed, tap to update.', {
-        autoClose: false,
-        onClick: () => {
-          if (updateToast) toast.dismiss(updateToast);
-
-          updateSW();
-          toast.warn('Updating...', { autoClose: false });
-        },
-        closeOnClick: true,
-      });
-    },
-    onRegistered(r) {
-      // try to update every 5 minutes
-      if (r) {
-        setInterval(
-          () => {
-            r.update();
-          },
-          5 * 60 * 1000
-        );
-
-        // TODO: Test that this works
-        r.addEventListener('updatefound', () => {
-          updateToast = toast.info('Downloading new version...');
-        });
-      }
-    },
-  });
-}
-
 createRoot(document.getElementById('root')!).render(<Container />);
-setTimeout(() => onLoad(), 50);

@@ -9,6 +9,7 @@ import { twMerge } from 'tailwind-merge';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { useOnline } from '../hooks/useOnline';
+import { useServiceWorker } from '../hooks/useServiceWorker';
 import { useUserData } from '../hooks/useUserData';
 import { useVisibilityChange } from '../hooks/useVisibilityChange';
 import { auth } from '../util/firebase';
@@ -21,6 +22,7 @@ import { TokenList } from './TokenList';
 
 export function App() {
   const [user, loading, error] = useAuthState(auth);
+  useServiceWorker();
 
   if (loading || error) return <LogoPage>{error && <p>Error: {error.message}</p>}</LogoPage>;
 
