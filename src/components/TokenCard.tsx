@@ -3,6 +3,7 @@ import { DocumentReference, arrayRemove, updateDoc } from 'firebase/firestore';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { twJoin } from 'tailwind-merge';
 import { TOTP } from 'totp-generator';
 
 import { CodeContext } from '../contexts/CodeContext';
@@ -90,10 +91,10 @@ export function TokenCard({
 
   return (
     <div
-      className={
-        'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[90%] relative cursor-pointer transition-all rotate-0' +
-        (editMode ? ' animate-wiggle' : '')
-      }
+      className={twJoin(
+        'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[90%] relative cursor-pointer transition-all rotate-0',
+        editMode && 'animate-wiggle'
+      )}
       style={{ animationDelay: `${Math.random() * 250}ms` }}
       tabIndex={0}
       {...bindHold()}

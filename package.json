@@ -24,6 +24,7 @@
     "react-pin-field": "^3.1.5",
     "react-toastify": "^10.0.5",
     "simple-icons": "^11.11.0",
+    "tailwind-merge": "^2.3.0",
     "totp-generator": "^1.0.0",
     "use-long-press": "^3.2.0"
   },

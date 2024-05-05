@@ -1,6 +1,7 @@
 import levenshtein from 'js-levenshtein';
 import { FaLock } from 'react-icons/fa';
 import * as icons from 'simple-icons';
+import { twJoin } from 'tailwind-merge';
 
 import bastillion from '../images/bastillion.png';
 import betterment from '../images/betterment.png';
@@ -119,12 +120,12 @@ export function AppIcon({ name, className }: { name: string; className?: string 
     );
 
   if (icon.type === IconType.Image)
-    return <img src={icon.url} className={imgClass + ` object-cover ${icon.padding ? 'p-1' : ''}`} />;
+    return <img src={icon.url} className={twJoin(imgClass, 'object-cover', icon.padding && 'p-1')} />;
 
   return (
     <div
       dangerouslySetInnerHTML={{ __html: icon.svg }}
-      className={`${imgClass} ${icon.padding ? 'p-2.5' : 'p-0.5'}`}
+      className={twJoin(imgClass, icon.padding ? 'p-2.5' : 'p-0.5')}
       style={{ fill: colors.fill }}
     />
   );

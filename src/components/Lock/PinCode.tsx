@@ -2,6 +2,7 @@ import { decrypt } from '@metamask/browser-passworder';
 import { useEffect } from 'react';
 import PinField from 'react-pin-field';
 import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 
 let unlocked = false;
 export function PinCode({
@@ -44,7 +45,7 @@ export function PinCode({
   };
 
   return (
-    <div className={'flex ' + className}>
+    <div className={twMerge('flex', className)}>
       <PinField
         length={6}
         className="border border-slate-500 w-10 sm:w-12 h-14 m-1.5 rounded-lg text-center text-6xl p-1"

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { FaBroadcastTower } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { useOnline } from '../hooks/useOnline';
@@ -67,7 +68,7 @@ function OnlineStatus({ className }: { className?: string }) {
   if (online) return null;
   return (
     <FaBroadcastTower
-      className={'text-danger fixed top-2 right-2 text-2xl z-10 ' + className}
+      className={twMerge('text-danger fixed top-2 right-2 text-2xl z-10 ' + className)}
       title="You are currently offline. It is not recommend to add/edit keys offline to avoid conflicts."
     />
   );

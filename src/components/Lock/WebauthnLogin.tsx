@@ -5,7 +5,7 @@ import { FaFingerprint } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { useOnHold } from '../../hooks/useOnHold';
-import { Auth, UserData } from '../../hooks/useUserData';
+import { Auth } from '../../hooks/useUserData';
 import { useVisibilityChange } from '../../hooks/useVisibilityChange';
 import { authenticate } from '../../util/webauthn';
 
