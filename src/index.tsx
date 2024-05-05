@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ToastContainer, Zoom, toast } from 'react-toastify';
+import { Id, ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerSW } from 'virtual:pwa-register';
 
@@ -21,9 +21,16 @@ if (!isBrowser) {
 const nav = navigator as any;
 if (nav.virtualKeyboard) nav.virtualKeyboard.overlaysContent = true;
 
+// keep track of updating toast
+let updateToast: Id;
+
 // add this to prompt for a refresh
 const updateSW = registerSW({
   onNeedRefresh() {
+    if (updateToast) {
+      toast.dismiss(updateToast);
+    }
+
     toast.warn('New version installed, tap to update.', {
       autoClose: false,
       onClick: () => {
@@ -45,7 +52,7 @@ const updateSW = registerSW({
 
       // TODO: Test that this works
       r.addEventListener('updatefound', () => {
-        toast.info('Downloading new version...');
+        updateToast = toast.info('Downloading new version...');
       });
     }
   },
