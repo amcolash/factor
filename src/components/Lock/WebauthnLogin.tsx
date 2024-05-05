@@ -1,9 +1,9 @@
 import { decrypt } from '@metamask/browser-passworder';
 import { DocumentReference, arrayRemove, updateDoc } from 'firebase/firestore';
-import { useEffect } from 'react';
 import { FaFingerprint } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
+import { useEffectOnce } from '../../hooks/useEffectOnce';
 import { useOnHold } from '../../hooks/useOnHold';
 import { Auth } from '../../hooks/useUserData';
 import { useVisibilityChange } from '../../hooks/useVisibilityChange';
@@ -22,10 +22,12 @@ export function WebauthnLogin({
     if (visible && webauthn) biometricLogin();
   });
 
-  // Attempt to login with biometric auth on startup
-  useEffect(() => {
-    if (webauthn) biometricLogin();
-  }, []);
+  // Attempt to login with biometric auth on startup, only once
+  useEffectOnce('webauthn', () => {
+    if (webauthn) {
+      biometricLogin();
+    }
+  });
 
   const bindHold = useOnHold(
     () => {
