@@ -41,6 +41,12 @@ const manifest: Partial<ManifestOptions> = {
       type: 'image/svg+xml',
       purpose: 'any',
     },
+    {
+      src: './logos/logo-monochrome.svg',
+      sizes: 'any',
+      type: 'image/svg+xml',
+      purpose: 'monochrome',
+    },
   ],
   screenshots: [
     {
@@ -149,6 +155,10 @@ export default defineConfig({
       includeAssets: ['**/*'],
       // add web manifest
       manifest,
+      devOptions: {
+        // Enable to have service worker/manifest in dev mode
+        // enabled: true,
+      },
     }),
   ],
 });
