@@ -59,7 +59,7 @@ export function TokenList({
         )}
         {userData.keys.length > 0 && (
           <div className="w-full max-w-screen-lg">
-            <div className="flex gap-4 sm:gap-6 items-center mb-6">
+            <div className="flex gap-4 sm:gap-6 items-center mb-10">
               <img src={logo} className="h-10 aspect-square -mb-0.5" />
 
               <div className="relative w-full">

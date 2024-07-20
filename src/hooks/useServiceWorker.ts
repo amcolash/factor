@@ -1,17 +1,20 @@
 import { Id, ToastOptions, UpdateOptions, toast } from 'react-toastify';
 import { registerSW } from 'virtual:pwa-register';
 
+let updateToast: Id;
+
 export function useServiceWorker() {
   // keep track of updating toast
-  let updateToast: Id;
 
   // add this to prompt for a refresh
   const updateSW = registerSW({
     onNeedRefresh() {
       const content = 'New version installed, tap to update.';
-      const options = {
+      const options: ToastOptions = {
         autoClose: false,
         closeOnClick: true,
+        type: 'warning',
+
         onClick: () => {
           const content = 'Updating...';
           if (updateToast) toast.update(updateToast, { render: content, onClick: undefined });
@@ -36,7 +39,7 @@ export function useServiceWorker() {
 
         // TODO: Test that this works
         r.addEventListener('updatefound', () => {
-          updateToast = toast.info('Downloading new version...');
+          if (!updateToast) updateToast = toast.info('Downloading new version...');
         });
       }
     },
