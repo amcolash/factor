@@ -9,6 +9,7 @@ import carta from '../images/carta.png';
 import guideline from '../images/guideline.png';
 import idme from '../images/id.me.png';
 import justworks from '../images/justworks.jpg';
+import sequoia from '../images/sequoia.png';
 import uwcu from '../images/uwcu.png';
 
 enum IconType {
@@ -67,6 +68,8 @@ function getIcon(name?: string): Icon | Image | undefined {
     case 'uw credit union':
     case 'uwcu':
       return { url: uwcu, padding: true, type: IconType.Image };
+    case 'sequoia':
+      return { url: sequoia, padding: true, type: IconType.Image };
     default:
       break;
   }
