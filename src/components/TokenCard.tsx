@@ -59,6 +59,21 @@ export function TokenCard({
       });
   }, [data.secret, encryptionToken, hidden]);
 
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    // Hide code shortly after revealed
+    if (hidden !== HiddenType.Hidden) {
+      timeout = setTimeout(() => {
+        setHidden(HiddenType.Hidden);
+      }, 30 * 1000);
+    }
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [hidden]);
+
   const timeChunk = Math.floor(timestamp.getTime() / 30000);
 
   const token = useMemo(() => {
