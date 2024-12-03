@@ -26,6 +26,7 @@ export function TokenCard({
   onEdit,
   setEditMode,
   editMode,
+  addRecentKey,
 }: {
   data: Key;
   userRef: DocumentReference;
@@ -33,6 +34,7 @@ export function TokenCard({
   onEdit: () => void;
   setEditMode: (value: boolean) => void;
   editMode: boolean;
+  addRecentKey: (name: string) => void;
 }) {
   const encryptionToken = useContext(CodeContext) || '';
   const [secret, setSecret] = useState('');
@@ -87,15 +89,14 @@ export function TokenCard({
     }
   }, [secret, timeChunk, hidden]);
 
-  const copyToken = useCallback(
-    () =>
-      copy(token).then((result) => {
-        if (result && token !== 'Token Error')
-          toast.success(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '', autoClose: 2500 });
-        else toast.error('Failed to copy code', { autoClose: 2500 });
-      }),
-    [token, data, isMobile, copy]
-  );
+  const copyToken = useCallback(() => {
+    copy(token).then((result) => {
+      if (result && token !== 'Token Error')
+        toast.success(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '', autoClose: 2500 });
+      else toast.error('Failed to copy code', { autoClose: 2500 });
+    });
+    addRecentKey(data.name);
+  }, [token, data, isMobile, copy]);
 
   useEffect(() => {
     if (hidden === HiddenType.FirstVisible && token !== 'Token Error') {

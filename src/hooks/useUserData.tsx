@@ -7,6 +7,7 @@ import { auth, db } from '../util/firebase';
 export interface UserData {
   email: string;
   keys: Key[];
+  recentKeys: string[];
   code: string;
   webauthn: Auth[];
 }

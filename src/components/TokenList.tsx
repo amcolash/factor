@@ -1,5 +1,5 @@
 import { decrypt } from '@metamask/browser-passworder';
-import { DocumentReference } from 'firebase/firestore';
+import { DocumentReference, updateDoc } from 'firebase/firestore';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -51,10 +51,67 @@ export function TokenList({
     if (editMode && navigator.vibrate) navigator.vibrate(200);
   }, [editMode]);
 
+  const Card = (props: { userKey: Key }): JSX.Element => {
+    const key = props.userKey;
+
+    try {
+      return (
+        <TokenCard
+          data={key}
+          userRef={userRef}
+          timestamp={timestamp}
+          onEdit={() => {
+            const ref = toast.info('Decrypting token...', { autoClose: 1500 });
+            decrypt(encryptionToken, key.secret)
+              .then((decrypted) => {
+                toast.dismiss(ref);
+
+                setEditKey(true);
+                setKeyToEdit({ name: key.name, secret: (decrypted as { secret: string }).secret });
+              })
+              .catch((err) => {
+                toast.dismiss(ref);
+
+                console.error(err);
+                toast.error('Failed to decrypt token', { autoClose: 2500 });
+              });
+          }}
+          setEditMode={setEditMode}
+          editMode={editMode}
+          addRecentKey={async (name) => {
+            const totalKeys = 4;
+
+            let recentKeys = userData.recentKeys || [];
+
+            // Remove existing key if it is already in list
+            if (recentKeys.includes(name)) {
+              recentKeys = recentKeys.filter((key) => key !== name);
+            }
+
+            // Add new key to front of list
+            recentKeys.unshift(name);
+
+            // Limit list to total keys count
+            if (recentKeys.length > totalKeys) {
+              recentKeys = recentKeys.slice(0, totalKeys);
+            }
+
+            await updateDoc(userRef, { recentKeys });
+          }}
+        />
+      );
+    } catch (err) {
+      console.error(err);
+      return <div>Error Loading Token ({key.name})</div>;
+    }
+  };
+
+  const gridClass = 'w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6';
+
   const tokens = useMemo(
     () => (
       <>
-        {userData.keys.length === 0 && (
+        {userData.keys?.length === 0 && (
           <div className="text-center text-lg bg-slate-800 p-8 w-full rounded-md">No keys added yet</div>
         )}
         {userData.keys.length > 0 && (
@@ -81,49 +138,32 @@ export function TokenList({
               </div>
             </div>
 
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {userData.recentKeys?.length > 0 && (
+              <div className="grid gap-4 sm:gap-6 mb-4 sm:mb-6">
+                <h2 className="m-0 text-xl leading-none">Recently Used</h2>
+                <div className={gridClass}>
+                  {userData.recentKeys.map((name: string) => {
+                    const key = userData.keys.find((k) => k.name === name);
+                    if (key) return <Card key={key.name} userKey={key} />;
+                  })}
+                </div>
+                <hr className="border-slate-700" />
+              </div>
+            )}
+
+            <div className={gridClass}>
               {userData.keys
                 .filter((k) => search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase()))
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .map((key: Key) => {
-                  try {
-                    return (
-                      <TokenCard
-                        key={key.name}
-                        data={key}
-                        userRef={userRef}
-                        timestamp={timestamp}
-                        onEdit={() => {
-                          const ref = toast.info('Decrypting token...', { autoClose: 1500 });
-                          decrypt(encryptionToken, key.secret)
-                            .then((decrypted) => {
-                              toast.dismiss(ref);
-
-                              setEditKey(true);
-                              setKeyToEdit({ name: key.name, secret: (decrypted as { secret: string }).secret });
-                            })
-                            .catch((err) => {
-                              toast.dismiss(ref);
-
-                              console.error(err);
-                              toast.error('Failed to decrypt token', { autoClose: 2500 });
-                            });
-                        }}
-                        setEditMode={setEditMode}
-                        editMode={editMode}
-                      />
-                    );
-                  } catch (err) {
-                    console.error(err);
-                    return <div>Error Loading Token ({key.name})</div>;
-                  }
-                })}
+                .map((key: Key) => (
+                  <Card key={key.name} userKey={key} />
+                ))}
             </div>
           </div>
         )}
       </>
     ),
-    [userData.keys, search, timestamp, userRef, editMode]
+    [userData.keys, userData.recentKeys, search, timestamp, userRef, editMode]
   );
 
   // Originally, this was: const progressOffset = (elapsedSeconds / 30) * 50;

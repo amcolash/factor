@@ -90,7 +90,7 @@ function Authorized({ user }: { user: User }) {
   useEffect(() => {
     if (!loading && !error && value?.data() === undefined) {
       promptPin().then((code) => {
-        if (code) setDoc(userRef, { keys: [], email: user.email || '', code, webauthn: [] });
+        if (code) setDoc(userRef, { keys: [], recentKeys: [], email: user.email || '', code, webauthn: [] });
         else toast.error('Failed to create user');
       });
     }
