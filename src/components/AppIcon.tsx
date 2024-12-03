@@ -9,7 +9,9 @@ import carta from '../images/carta.png';
 import guideline from '../images/guideline.png';
 import idme from '../images/id.me.png';
 import justworks from '../images/justworks.jpg';
+import microsoft from '../images/microsoft.png';
 import sequoia from '../images/sequoia.png';
+import twitter from '../images/twitter.png';
 import uwcu from '../images/uwcu.png';
 
 enum IconType {
@@ -63,6 +65,8 @@ function getIcon(name?: string): Icon | Image | undefined {
       return { url: idme, type: IconType.Image };
     case 'justworks':
       return { url: justworks, type: IconType.Image };
+    case 'microsoft':
+      return { url: microsoft, padding: true, type: IconType.Image };
     case 'nas':
       return { ...icons.siSynology, type: IconType.Icon };
     case 'uw credit union':
@@ -70,6 +74,8 @@ function getIcon(name?: string): Icon | Image | undefined {
       return { url: uwcu, padding: true, type: IconType.Image };
     case 'sequoia':
       return { url: sequoia, padding: true, type: IconType.Image };
+    case 'twitter':
+      return { url: twitter, padding: true, type: IconType.Image };
     default:
       break;
   }
