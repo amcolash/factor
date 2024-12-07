@@ -1,18 +1,16 @@
 import { decrypt } from '@metamask/browser-passworder';
 import { DocumentReference, updateDoc } from 'firebase/firestore';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 import { FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { useRefreshTimer } from '../hooks/useRefreshTimer';
-import { useTailwind } from '../hooks/useTailwind';
 import { Key, UserData } from '../hooks/useUserData';
 import logo from '../images/logo.png';
 import { EditKey } from './EditKey';
 import { Modal } from './Modal';
+import { Progress } from './Progress';
 import { TokenCard } from './TokenCard';
 
 export function TokenList({
@@ -30,16 +28,11 @@ export function TokenList({
   editKey: boolean;
   setEditKey: (value: boolean) => void;
 }) {
-  const { time, timestamp } = useRefreshTimer();
+  const { timestamp } = useRefreshTimer();
   const encryptionToken = useContext(CodeContext) || '';
 
   const [search, setSearch] = useState('');
   const [keyToEdit, setKeyToEdit] = useState<Key>();
-  const tailwind = useTailwind();
-
-  const remainingMs = 30000 - (time.getTime() % 30000);
-  const remainingSeconds = Math.ceil(remainingMs / 1000);
-  const elapsedSeconds = 30 - remainingSeconds;
 
   useEffect(() => {
     return () => {
@@ -97,7 +90,8 @@ export function TokenList({
               recentKeys = recentKeys.slice(0, totalKeys);
             }
 
-            await updateDoc(userRef, { recentKeys });
+            if (JSON.stringify(userData.recentKeys) !== JSON.stringify(recentKeys))
+              await updateDoc(userRef, { recentKeys });
           }}
         />
       );
@@ -141,6 +135,7 @@ export function TokenList({
 
   return (
     <>
+      <Progress />
 
       <div className="flex flex-col gap-4 m-6 sm:m-8 items-center pb-24">
         {userData.keys?.length === 0 ? (
