@@ -1,6 +1,6 @@
 import { decrypt } from '@metamask/browser-passworder';
 import { DocumentReference, updateDoc } from 'firebase/firestore';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useTailwindSize } from '~hooks/useTailwindSize';
@@ -47,92 +47,105 @@ export function TokenList({
     if (editMode && navigator.vibrate) navigator.vibrate(200);
   }, [editMode]);
 
-  const Card = (props: { userKey: Key; timestamp: Date }): JSX.Element => {
-    const { userKey: key, timestamp } = props;
+  const addRecentKey = useCallback(
+    async (name: string) => {
+      const totalKeys = 4;
 
-    try {
-      return (
-        <TokenCard
-          data={key}
-          userRef={userRef}
-          timestamp={timestamp}
-          onEdit={() => {
-            const ref = toast.info('Decrypting token...', { autoClose: 1500 });
-            decrypt(encryptionToken, key.secret)
-              .then((decrypted) => {
-                toast.dismiss(ref);
+      let recentKeys = [...(userData.recentKeys || [])];
 
-                setEditKey(true);
-                setKeyToEdit({ name: key.name, secret: (decrypted as { secret: string }).secret });
-              })
-              .catch((err) => {
-                toast.dismiss(ref);
+      // Remove existing key if it is already in list
+      if (recentKeys.includes(name)) {
+        recentKeys = recentKeys.filter((key) => key !== name);
+      }
 
-                console.error(err);
-                toast.error('Failed to decrypt token', { autoClose: 2500 });
-              });
-          }}
-          setEditMode={setEditMode}
-          editMode={editMode}
-          addRecentKey={async (name) => {
-            const totalKeys = 4;
+      // Add new key to front of list
+      recentKeys.unshift(name);
 
-            let recentKeys = userData.recentKeys || [];
+      // Limit list to total keys count
+      if (recentKeys.length > totalKeys) {
+        recentKeys = recentKeys.slice(0, totalKeys);
+      }
 
-            // Remove existing key if it is already in list
-            if (recentKeys.includes(name)) {
-              recentKeys = recentKeys.filter((key) => key !== name);
-            }
+      if (JSON.stringify(recentKeys) !== JSON.stringify(userData.recentKeys)) {
+        await updateDoc(userRef, { recentKeys });
+      }
+    },
+    [userData.recentKeys, userRef]
+  );
 
-            // Add new key to front of list
-            recentKeys.unshift(name);
+  const Card = useCallback(
+    ({ userKey: key, timestamp }: { userKey: Key; timestamp: Date }): JSX.Element => {
+      try {
+        return (
+          <TokenCard
+            data={key}
+            userRef={userRef}
+            timestamp={timestamp}
+            onEdit={() => {
+              const ref = toast.info('Decrypting token...', { autoClose: 1500 });
+              decrypt(encryptionToken, key.secret)
+                .then((decrypted) => {
+                  toast.dismiss(ref);
 
-            // Limit list to total keys count
-            if (recentKeys.length > totalKeys) {
-              recentKeys = recentKeys.slice(0, totalKeys);
-            }
+                  setEditKey(true);
+                  setKeyToEdit({ name: key.name, secret: (decrypted as { secret: string }).secret });
+                })
+                .catch((err) => {
+                  toast.dismiss(ref);
 
-            if (JSON.stringify(userData.recentKeys) !== JSON.stringify(recentKeys))
-              await updateDoc(userRef, { recentKeys });
-          }}
-        />
-      );
-    } catch (err) {
-      console.error(err);
-      return <div>Error Loading Token ({key.name})</div>;
-    }
-  };
+                  console.error(err);
+                  toast.error('Failed to decrypt token', { autoClose: 2500 });
+                });
+            }}
+            setEditMode={setEditMode}
+            editMode={editMode}
+            addRecentKey={addRecentKey}
+          />
+        );
+      } catch (err) {
+        console.error(err);
+        return <div>Error Loading Token ({key.name})</div>;
+      }
+    },
+    [encryptionToken, editMode, setEditMode, setEditKey, userRef, addRecentKey]
+  );
 
   const gridClass = 'w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6';
 
-  const recent = useMemo(() => {
-    if (userData.recentKeys) {
-      return userData.recentKeys.slice(0, size === 'sm' || size === 'lg' ? 3 : 4);
-    } else {
-      return [];
-    }
-  }, [userData.recentKeys, size]);
+  // const recent = useMemo(() => {
+  //   return userData.recentKeys || [];
+  // }, [userData.recentKeys]);
 
-  const recentKeys = useMemo(
-    () => (
-      <div className="grid gap-4 sm:gap-6 mb-4 sm:mb-6">
-        <h2 className="m-0 text-xl leading-none">Recently Used</h2>
-        <div className={gridClass}>
-          {recent.map((name: string) => {
-            const key = userData.keys.find((k) => k.name === name);
-            if (key) return <Card key={key.name} timestamp={timestamp} userKey={key} />;
-          })}
-        </div>
-        <hr className="border-slate-700" />
-      </div>
-    ),
-    [recent, search, timestamp, userRef, editMode]
-  );
+  // const recentKeys = useMemo(
+  //   () => (
+  //     <div className="grid gap-4 sm:gap-6 mb-4 sm:mb-6">
+  //       <h2 className="m-0 text-xl leading-none">Recently Used</h2>
+  //       <div className={gridClass}>
+  //         {userData.recentKeys.slice(0, size === 'sm' || size === 'lg' ? 3 : 4).map((name: string) => {
+  //           const key = userData.keys.find((k) => k.name === name);
+  //           if (key) return <Card key={key.name} timestamp={timestamp} userKey={key} />;
+  //         })}
+  //       </div>
+  //       <hr className="border-slate-700" />
+  //     </div>
+  //   ),
+  //   [userData.recentKeys, userData.keys, search, timestamp, userRef, editMode, size]
+  // );
 
+  // const keys = useCustomMemo(
+  //   () => userData.keys,
+  //   [userData.keys],
+  //   (prev, next) => {
+  //     return true;
+  //     return diff(prev, next).length === 0;
+  //   }
+  // );
+
+  const keys = userData.keys || [];
   const tokens = useMemo(
     () => (
       <div className={gridClass}>
-        {userData.keys
+        {keys
           .filter((k) => search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase()))
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((key: Key) => (
@@ -140,13 +153,13 @@ export function TokenList({
           ))}
       </div>
     ),
-    [userData.keys, search, timestamp, userRef, editMode]
+    [keys, search, timestamp, userRef, editMode]
   );
 
   return (
     <>
       <div className="flex flex-col gap-4 m-6 sm:m-8 items-center pb-24">
-        {userData.keys?.length === 0 ? (
+        {keys?.length === 0 ? (
           <div className="text-center text-lg bg-slate-800 p-8 w-full rounded-md">No keys added yet</div>
         ) : (
           <div className="w-full max-w-screen-lg">
@@ -165,7 +178,7 @@ export function TokenList({
               </div>
             </div>
 
-            {recent.length > 0 && recentKeys}
+            {/* {userData.recentKeys.length > 0 && recentKeys} */}
             {tokens}
           </div>
         )}
