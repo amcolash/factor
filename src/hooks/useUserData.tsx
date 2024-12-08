@@ -1,6 +1,6 @@
 import { DocumentReference, doc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import { auth, db } from '../util/firebase';
 
@@ -27,7 +27,7 @@ export interface Key {
 export function useUserData() {
   const [user] = useAuthState(auth);
   const userRef = doc(db, 'users', user?.uid || '') as DocumentReference<UserData>;
-  const [value, loading, error] = useDocument(userRef);
+  const [value, loading, error] = useDocumentData(userRef);
 
-  return { value, loading, error, userRef };
+  return { data: value, loading, error, userRef };
 }

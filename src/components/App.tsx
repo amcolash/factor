@@ -78,7 +78,7 @@ function OnlineStatus({ className }: { className?: string }) {
 }
 
 function Authorized({ user }: { user: User }) {
-  const { value, loading, error, userRef } = useUserData();
+  const { data, loading, error, userRef } = useUserData();
 
   const [token, setToken] = useState<string>();
   const [editMode, setEditMode] = useState(false);
@@ -89,13 +89,13 @@ function Authorized({ user }: { user: User }) {
   });
 
   useEffect(() => {
-    if (!loading && !error && value?.data() === undefined) {
+    if (!loading && !error && !data) {
       promptPin().then((code) => {
         if (code) setDoc(userRef, { keys: [], recentKeys: [], email: user.email || '', code, webauthn: [] });
         else toast.error('Failed to create user');
       });
     }
-  }, [value, loading, error]);
+  }, [data, loading, error]);
 
   const updatePin = async () => {
     if (!confirm('Would you like to update your pin?')) return;
@@ -105,11 +105,11 @@ function Authorized({ user }: { user: User }) {
     else toast.error('Failed to update pin');
   };
 
-  if (loading || error || !value || value.data() === undefined)
+  if (loading || error || !data)
     return (
       <LogoPage>
         {error && <p>Error: {error.message}</p>}
-        {!value || (value.data() === undefined && <p>No data</p>)}
+        {!data && <p>No data</p>}
       </LogoPage>
     );
 
@@ -117,12 +117,7 @@ function Authorized({ user }: { user: User }) {
     return (
       <>
         <OnlineStatus className="!bottom-4 !right-5 top-auto" />
-        <Lock
-          unlock={(code) => setToken(code)}
-          encryptedCode={value.data()?.code!}
-          data={value.data()}
-          userRef={userRef}
-        />
+        <Lock unlock={(code) => setToken(code)} encryptedCode={data?.code!} data={data} userRef={userRef} />
       </>
     );
 
@@ -130,7 +125,7 @@ function Authorized({ user }: { user: User }) {
     <CodeContext.Provider value={token}>
       <OnlineStatus />
       <TokenList
-        userData={value.data()!}
+        userData={data}
         userRef={userRef}
         editMode={editMode}
         setEditMode={setEditMode}
@@ -144,8 +139,8 @@ function Authorized({ user }: { user: User }) {
         editMode={editMode}
         setEditKey={setEditKey}
         setEditMode={setEditMode}
-        exportKeys={() => exportKeys(token, value.data()!)}
-        importKeys={() => importKeys(token, value.data()!, userRef)}
+        exportKeys={() => exportKeys(token, data)}
+        importKeys={() => importKeys(token, data, userRef)}
       />
     </CodeContext.Provider>
   );
