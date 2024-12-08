@@ -11,7 +11,6 @@ import { Key, UserData } from '../hooks/useUserData';
 import logo from '../images/logo.png';
 import { EditKey } from './EditKey';
 import { Modal } from './Modal';
-import { Progress } from './Progress';
 import { TokenCard } from './TokenCard';
 
 export function TokenList({
@@ -146,8 +145,6 @@ export function TokenList({
 
   return (
     <>
-      <Progress />
-
       <div className="flex flex-col gap-4 m-6 sm:m-8 items-center pb-24">
         {userData.keys?.length === 0 ? (
           <div className="text-center text-lg bg-slate-800 p-8 w-full rounded-md">No keys added yet</div>

@@ -18,6 +18,7 @@ import { Lock } from './Lock/Lock';
 import { Login } from './Login';
 import { LogoPage } from './Logo';
 import { Menu } from './Menu';
+import { Progress } from './Progress';
 import { TokenList } from './TokenList';
 
 export function App() {
@@ -136,6 +137,7 @@ function Authorized({ user }: { user: User }) {
         editKey={editKey}
         setEditKey={setEditKey}
       />
+      <Progress />
       <Menu
         lock={() => setToken(undefined)}
         updateCode={updatePin}

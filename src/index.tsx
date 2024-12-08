@@ -23,7 +23,7 @@ if (nav.virtualKeyboard) nav.virtualKeyboard.overlaysContent = true;
 
 function Container() {
   return (
-    <StrictMode>
+    <>
       <App />
       <ToastContainer
         theme="dark"
@@ -33,7 +33,7 @@ function Container() {
         closeButton={false}
         autoClose={5000}
       />
-    </StrictMode>
+    </>
   );
 }
 
