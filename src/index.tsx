@@ -25,7 +25,14 @@ function Container() {
   return (
     <StrictMode>
       <App />
-      <ToastContainer theme="dark" position="bottom-center" transition={Zoom} hideProgressBar closeButton={false} />
+      <ToastContainer
+        theme="dark"
+        position="bottom-center"
+        transition={Zoom}
+        hideProgressBar
+        closeButton={false}
+        autoClose={5000}
+      />
     </StrictMode>
   );
 }

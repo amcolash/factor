@@ -3,6 +3,7 @@ import { DocumentReference, updateDoc } from 'firebase/firestore';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { useTailwindSize } from '~hooks/useTailwindSize';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { useRefreshTimer } from '../hooks/useRefreshTimer';
@@ -29,6 +30,8 @@ export function TokenList({
   setEditKey: (value: boolean) => void;
 }) {
   const { timestamp } = useRefreshTimer();
+  const size = useTailwindSize();
+
   const encryptionToken = useContext(CodeContext) || '';
 
   const [search, setSearch] = useState('');
@@ -45,8 +48,8 @@ export function TokenList({
     if (editMode && navigator.vibrate) navigator.vibrate(200);
   }, [editMode]);
 
-  const Card = (props: { userKey: Key }): JSX.Element => {
-    const key = props.userKey;
+  const Card = (props: { userKey: Key; timestamp: Date }): JSX.Element => {
+    const { userKey: key, timestamp } = props;
 
     try {
       return (
@@ -103,20 +106,28 @@ export function TokenList({
 
   const gridClass = 'w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6';
 
+  const recent = useMemo(() => {
+    if (userData.recentKeys) {
+      return userData.recentKeys.slice(0, size === 'sm' || size === 'lg' ? 3 : 4);
+    } else {
+      return [];
+    }
+  }, [userData.recentKeys, size]);
+
   const recentKeys = useMemo(
     () => (
       <div className="grid gap-4 sm:gap-6 mb-4 sm:mb-6">
         <h2 className="m-0 text-xl leading-none">Recently Used</h2>
         <div className={gridClass}>
-          {userData.recentKeys?.map((name: string) => {
+          {recent.map((name: string) => {
             const key = userData.keys.find((k) => k.name === name);
-            if (key) return <Card key={key.name} userKey={key} />;
+            if (key) return <Card key={key.name} timestamp={timestamp} userKey={key} />;
           })}
         </div>
         <hr className="border-slate-700" />
       </div>
     ),
-    [userData.recentKeys, search, timestamp, userRef, editMode]
+    [recent, search, timestamp, userRef, editMode]
   );
 
   const tokens = useMemo(
@@ -126,7 +137,7 @@ export function TokenList({
           .filter((k) => search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase()))
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((key: Key) => (
-            <Card key={key.name} userKey={key} />
+            <Card key={key.name} timestamp={timestamp} userKey={key} />
           ))}
       </div>
     ),
@@ -157,7 +168,7 @@ export function TokenList({
               </div>
             </div>
 
-            {userData.recentKeys?.length > 0 && recentKeys}
+            {recent.length > 0 && recentKeys}
             {tokens}
           </div>
         )}
