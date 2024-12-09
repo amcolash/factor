@@ -1,12 +1,13 @@
-import { encrypt } from '@metamask/browser-passworder';
+import { decrypt, encrypt } from '@metamask/browser-passworder';
 import { DocumentReference, arrayRemove, arrayUnion, updateDoc } from 'firebase/firestore';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash, FaQrcode } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { AppIcon } from './AppIcon';
 import { QR } from './QR';
+import { secretCache } from './TokenCard';
 
 interface EditKeyProps {
   name?: string;
@@ -17,14 +18,36 @@ interface EditKeyProps {
 
 export function EditKey(props: EditKeyProps) {
   const [name, setName] = useState(props.name || '');
-  const [secret, setSecret] = useState(props.secret || '');
+  const [secret, setSecret] = useState('');
   const [scan, setScan] = useState(false);
   const [masked, setMasked] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [decrypting, setDecrypting] = useState(false);
 
   const token = useContext(CodeContext) || '';
 
   const editing = props.name || props.secret;
+
+  useEffect(() => {
+    if (props.name && props.secret) {
+      if (secretCache.has(props.name)) {
+        setSecret(secretCache.get(props.name)!);
+        return;
+      }
+
+      setDecrypting(true);
+      decrypt(token, props.secret)
+        .then((decrypted) => {
+          setSecret((decrypted as { secret: string }).secret);
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error('Failed to decrypt token.', { autoClose: 2500 });
+          close();
+        })
+        .finally(() => setDecrypting(false));
+    }
+  }, []);
 
   const addKey = async (name: string, secret: string) => {
     if (name === '' || secret === '') {
@@ -34,9 +57,9 @@ export function EditKey(props: EditKeyProps) {
 
     try {
       setUpdating(true);
-
-      if (editing && (props.name !== name || props.secret !== secret)) {
+      if (editing) {
         await updateDoc(props.userRef, { keys: arrayRemove({ name: props.name, secret: props.secret }) });
+        if (props.name) secretCache.delete(props.name);
       }
 
       const encryptedSecret = await encrypt(token, { secret });
@@ -77,9 +100,10 @@ export function EditKey(props: EditKeyProps) {
               <input
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
-                placeholder="Secret"
+                placeholder={decrypting ? 'Decrypting' : 'Secret'}
                 autoComplete="false"
                 type={masked ? 'password' : 'text'}
+                disabled={decrypting}
               />
               <button
                 className="absolute right-0 top-0 bottom-0 flex items-center cursor-pointer bg-transparent"

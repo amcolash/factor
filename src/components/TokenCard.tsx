@@ -163,7 +163,7 @@ export function TokenCard({
 
           const confirm = window.confirm(`Are you sure you want to remove ${data.name}? This cannot be undone!`);
           if (confirm) {
-            const confirm2 = window.confirm('Are you really sure?');
+            const confirm2 = window.confirm(`Are you really sure you want to delete ${data.name}?`);
             if (confirm2) updateDoc(userRef, { keys: arrayRemove(data) });
           }
         }}

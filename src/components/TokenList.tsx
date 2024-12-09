@@ -75,21 +75,8 @@ export function TokenList({
 
   const onEdit = useCallback(
     (key: Key) => {
-      if (secretCache.has(key.name)) {
-        setEditKey(true);
-        setKeyToEdit({ name: key.name, secret: secretCache.get(key.name)! });
-        return;
-      }
-
-      decrypt(encryptionToken, key.secret)
-        .then((decrypted) => {
-          setEditKey(true);
-          setKeyToEdit({ name: key.name, secret: (decrypted as { secret: string }).secret });
-        })
-        .catch((err) => {
-          console.error(err);
-          toast.error('Failed to decrypt token', { autoClose: 2500 });
-        });
+      setEditKey(true);
+      setKeyToEdit({ name: key.name, secret: key.secret });
     },
     [encryptionToken, setEditKey, setKeyToEdit]
   );
