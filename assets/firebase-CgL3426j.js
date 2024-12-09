@@ -1,4 +1,4 @@
-import{o as gf,_ as wo}from"./vendor-57jBAeOT.js";var _c={};/**
+import{o as gf,_ as wo}from"./vendor-G97e3PG7.js";var _c={};/**
  * @license
  * Copyright 2017 Google LLC
  *
@@ -3274,4 +3274,4 @@ This typically indicates that your device does not have a healthy Internet conne
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */const ev=5*60,tv=Zu("authIdTokenMaxAge")||ev;let Hu=null;const nv=r=>async e=>{const t=e&&await e.getIdTokenResult(),n=t&&(new Date().getTime()-Date.parse(t.issuedAtTime))/1e3;if(n&&n>tv)return;const i=t==null?void 0:t.token;Hu!==i&&(Hu=i,await fetch(r,{method:i?"POST":"DELETE",headers:i?{Authorization:`Bearer ${i}`}:{}}))};function Tv(r=Cm()){const e=Ji(r,"auth");if(e.isInitialized())return e.getImmediate();const t=Ly(r,{popupRedirectResolver:JI,persistence:[cI,Jy,bd]}),n=Zu("authTokenSyncURL");if(n&&typeof isSecureContext=="boolean"&&isSecureContext){const s=new URL(n,location.origin);if(location.origin===s.origin){const a=nv(s.toString());Hy(t,a,()=>a(t.currentUser)),$y(t,c=>a(c))}}const i=Af("auth");return i&&Uy(t,`http://${i}`),t}function rv(){var r,e;return(e=(r=document.getElementsByTagName("head"))===null||r===void 0?void 0:r[0])!==null&&e!==void 0?e:document}xy({loadJS(r){return new Promise((e,t)=>{const n=document.createElement("script");n.setAttribute("src",r),n.onload=e,n.onerror=i=>{const s=Be("internal-error");s.customData=i,t(s)},n.type="text/javascript",n.charset="UTF-8",rv().appendChild(n)})},gapiScript:"https://apis.google.com/js/api.js",recaptchaV2Script:"https://www.google.com/recaptcha/api.js",recaptchaEnterpriseScript:"https://www.google.com/recaptcha/enterprise.js?render="});ZI("Browser");export{yt as G,lv as a,_v as b,hv as c,cv as d,yv as e,vv as f,Tv as g,pv as h,Sm as i,Bt as j,Iv as o,gv as p,uv as r,fv as s,dv as t,mv as u};
-//# sourceMappingURL=firebase-CCkfBKvM.js.map
+//# sourceMappingURL=firebase-CgL3426j.js.map
