@@ -43,7 +43,7 @@ export function EditKey(props: EditKeyProps) {
         .catch((err) => {
           console.error(err);
           toast.error('Failed to decrypt token.', { autoClose: 2500 });
-          close();
+          props.close();
         })
         .finally(() => setDecrypting(false));
     }
@@ -52,6 +52,11 @@ export function EditKey(props: EditKeyProps) {
   const addKey = async (name: string, secret: string) => {
     if (name === '' || secret === '') {
       toast.error('Name and secret are required');
+      return;
+    }
+
+    if (editing && props.name === name && props.secret === secret) {
+      props.close();
       return;
     }
 
