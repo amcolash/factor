@@ -19,6 +19,8 @@ enum HiddenType {
   Visible,
 }
 
+export const secretCache = new Map<string, string>();
+
 export function TokenCard({
   data,
   userRef,
@@ -37,27 +39,40 @@ export function TokenCard({
   addRecentKey: (name: string) => void;
 }) {
   const encryptionToken = useContext(CodeContext) || '';
-  const [secret, setSecret] = useState('');
+  const [secret, setSecret] = useState(secretCache.get(data.name) || '');
   const [hidden, setHidden] = useState<HiddenType>(HiddenType.Hidden);
   const isMobile = useIsMobile();
   const [copy] = useCopyToClipboard();
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     if (editMode) onEdit();
     else if (hidden === HiddenType.Hidden) setHidden(HiddenType.FirstVisible);
     else copyToken();
-  };
+  }, [editMode, hidden]);
 
   const bindHold = useOnHold(() => setEditMode(!editMode), onClick);
 
   useEffect(() => {
+    if (secret.length > 0) setHidden(HiddenType.Visible);
+  }, []);
+
+  useEffect(() => {
     if (hidden === HiddenType.Hidden) return;
 
+    if (secretCache.has(data.name)) {
+      setSecret(secretCache.get(data.name) || '');
+      return;
+    }
+
     decrypt(encryptionToken, data.secret)
-      .then((decrypted) => setSecret((decrypted as { secret: string }).secret))
+      .then((decrypted) => {
+        setSecret((decrypted as { secret: string }).secret);
+        secretCache.set(data.name, (decrypted as { secret: string }).secret);
+      })
       .catch((err) => {
         console.error(err);
         setSecret('Error');
+        secretCache.delete(data.name);
       });
   }, [data.secret, encryptionToken, hidden]);
 
@@ -140,7 +155,7 @@ export function TokenCard({
       </div>
 
       <button
-        className="absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white hover:brightness-100 sm:hover:bg-danger transition-all duration-300"
+        className="remove absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white sm:hover:bg-danger transition-all duration-300"
         style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
         tabIndex={editMode ? 0 : -1}
         onClick={(e) => {

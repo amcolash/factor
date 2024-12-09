@@ -11,7 +11,7 @@ import { Key, UserData } from '../hooks/useUserData';
 import logo from '../images/logo.png';
 import { EditKey } from './EditKey';
 import { Modal } from './Modal';
-import { TokenCard } from './TokenCard';
+import { TokenCard, secretCache } from './TokenCard';
 
 export function TokenList({
   userData,
@@ -75,17 +75,18 @@ export function TokenList({
 
   const onEdit = useCallback(
     (key: Key) => {
-      const ref = toast.info('Decrypting token...', { autoClose: 1500 });
+      if (secretCache.has(key.name)) {
+        setEditKey(true);
+        setKeyToEdit({ name: key.name, secret: secretCache.get(key.name)! });
+        return;
+      }
+
       decrypt(encryptionToken, key.secret)
         .then((decrypted) => {
-          toast.dismiss(ref);
-
           setEditKey(true);
           setKeyToEdit({ name: key.name, secret: (decrypted as { secret: string }).secret });
         })
         .catch((err) => {
-          toast.dismiss(ref);
-
           console.error(err);
           toast.error('Failed to decrypt token', { autoClose: 2500 });
         });
@@ -126,7 +127,7 @@ export function TokenList({
                     if (key)
                       return (
                         <TokenCard
-                          key={key.name}
+                          key={key.name + key.secret}
                           data={key}
                           userRef={userRef}
                           timestamp={timestamp}
@@ -148,6 +149,7 @@ export function TokenList({
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((key: Key) => (
                   <TokenCard
+                    key={key.name + key.secret}
                     data={key}
                     userRef={userRef}
                     timestamp={timestamp}
