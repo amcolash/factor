@@ -68,6 +68,7 @@ function getIcon(name?: string): Icon | Image | undefined {
     case 'microsoft':
       return { url: microsoft, padding: true, type: IconType.Image };
     case 'nas':
+    case 'synology':
       return { ...icons.siSynology, type: IconType.Icon };
     case 'uw credit union':
     case 'uwcu':
@@ -97,8 +98,8 @@ function getColors(i?: Icon | Image): { background: string; fill?: string } {
     case 'amazon':
       background = darkColor;
       break;
-    case 'microsoft':
-      fill = '#00a2ed';
+    case 'epic games':
+      fill = 'white';
       break;
     case 'github':
     case 'patreon':
