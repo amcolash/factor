@@ -22,6 +22,7 @@ export interface Auth {
 export interface Key {
   name: string;
   secret: string;
+  archived: boolean;
 }
 
 export function useUserData() {

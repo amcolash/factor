@@ -74,7 +74,7 @@ export function TokenList({
   const onEdit = useCallback(
     (key: Key) => {
       setEditKey(true);
-      setKeyToEdit({ name: key.name, secret: key.secret });
+      setKeyToEdit({ name: key.name, secret: key.secret, archived: key.archived });
     },
     [encryptionToken, setEditKey, setKeyToEdit]
   );
@@ -131,7 +131,9 @@ export function TokenList({
 
             <div className={gridClass}>
               {userData.keys
-                .filter((k) => search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase()))
+                .filter(
+                  (k) => (search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase())) && !k.archived
+                )
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((key: Key) => (
                   <TokenCard
@@ -146,6 +148,31 @@ export function TokenList({
                   />
                 ))}
             </div>
+
+            {editMode && (
+              <div className="mt-4 pt-4 sm:mt-6 sm:pt-6 border-t-2 border-slate-700">
+                <h2 className="mb-4 sm:mb-6 text-xl leading-none">Archived Tokens</h2>
+                <div className={gridClass}>
+                  {userData.keys
+                    .filter(
+                      (k) => (search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase())) && k.archived
+                    )
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map((key: Key) => (
+                      <TokenCard
+                        key={key.name + key.secret}
+                        data={key}
+                        userRef={userRef}
+                        timestamp={timestamp}
+                        onEdit={() => onEdit(key)}
+                        setEditMode={setEditMode}
+                        editMode={editMode}
+                        addRecentKey={addRecentKey}
+                      />
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -161,6 +188,7 @@ export function TokenList({
           <EditKey
             name={keyToEdit?.name}
             secret={keyToEdit?.secret}
+            archived={keyToEdit?.archived || false}
             userRef={userRef}
             close={() => {
               setEditKey(false);

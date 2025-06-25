@@ -1,18 +1,18 @@
 import { encrypt } from '@metamask/browser-passworder';
 import { User } from 'firebase/auth';
 import { setDoc, updateDoc } from 'firebase/firestore';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { FaBroadcastTower } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
 import { useLockTimer } from '~hooks/useLockTimer';
+import { useMigrateData } from '~hooks/useMigrateData';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { useOnline } from '../hooks/useOnline';
 import { useServiceWorker } from '../hooks/useServiceWorker';
 import { useUserData } from '../hooks/useUserData';
-import { useVisibilityChange } from '../hooks/useVisibilityChange';
 import { auth } from '../util/firebase';
 import { exportKeys, importKeys } from '../util/keys';
 import { Lock } from './Lock/Lock';
@@ -85,6 +85,7 @@ function Authorized({ user }: { user: User }) {
   const [editMode, setEditMode] = useState(false);
   const [editKey, setEditKey] = useState(false);
 
+  useMigrateData(userRef, data);
   useLockTimer(setToken);
 
   useEffect(() => {

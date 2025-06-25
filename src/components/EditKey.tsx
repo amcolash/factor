@@ -12,6 +12,7 @@ import { secretCache } from './TokenCard';
 interface EditKeyProps {
   name?: string;
   secret?: string;
+  archived?: boolean;
   userRef: DocumentReference;
   close: () => void;
 }
@@ -63,12 +64,16 @@ export function EditKey(props: EditKeyProps) {
     try {
       setUpdating(true);
       if (editing) {
-        await updateDoc(props.userRef, { keys: arrayRemove({ name: props.name, secret: props.secret }) });
+        await updateDoc(props.userRef, {
+          keys: arrayRemove({ name: props.name, secret: props.secret, archived: props.archived }),
+        });
         if (props.name) secretCache.delete(props.name);
       }
 
       const encryptedSecret = await encrypt(token, { secret });
-      await updateDoc(props.userRef, { keys: arrayUnion({ name, secret: encryptedSecret }) });
+      await updateDoc(props.userRef, {
+        keys: arrayUnion({ name, secret: encryptedSecret, archived: props.archived }),
+      });
       setName('');
       setSecret('');
       setMasked(true);

@@ -16,14 +16,14 @@ export async function exportKeys(token: string, data: UserData): Promise<void> {
   for (let i = 0; i < data.keys.length; i++) {
     const key = data.keys[i];
     const decoded = (await decrypt(token, key.secret)) as { secret: string };
-    keys.push({ name: key.name, secret: decoded.secret });
+    keys.push({ ...key, secret: decoded.secret });
 
     toast.update(toastId, { progress: i / data.keys.length });
   }
 
   toast.done(toastId);
 
-  const blob = new Blob([JSON.stringify(keys)], { type: 'text/json' });
+  const blob = new Blob([JSON.stringify(keys, undefined, 2)], { type: 'text/json' });
 
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -51,12 +51,13 @@ export async function importKeys(token: string, data: UserData, userRef: Documen
             for (const key of keys) {
               if (!key.name || !key.secret) throw 'Invalid file format';
 
-              const name = key.name;
+              const { archived, name } = key;
+              // Skip existing keys
               if (data.keys.some((k) => k.name.toLowerCase() === name.toLowerCase())) {
                 skipped++;
               } else {
                 const encryptedSecret = await encrypt(token, key.secret);
-                await updateDoc(userRef, { keys: arrayUnion({ name, secret: encryptedSecret }) });
+                await updateDoc(userRef, { keys: arrayUnion({ name, secret: encryptedSecret, archived }) });
                 imported++;
               }
             }

@@ -9,6 +9,7 @@ export default {
         secondary: '#051524',
         tertiary: '#2c2155',
         danger: '#f07f7b',
+        warning: '#f0c27b',
       },
       keyframes: {
         wiggle: {

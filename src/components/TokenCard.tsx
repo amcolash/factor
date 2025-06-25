@@ -1,7 +1,7 @@
 import { decrypt } from '@metamask/browser-passworder';
-import { DocumentReference, arrayRemove, updateDoc } from 'firebase/firestore';
+import { DocumentReference, arrayRemove, arrayUnion, updateDoc } from 'firebase/firestore';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { FaArchive, FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { twJoin } from 'tailwind-merge';
 import { TOTP } from 'totp-generator';
@@ -120,11 +120,14 @@ export function TokenCard({
     }
   }, [hidden, token]);
 
+  if (data.archived && !editMode) return null;
+
   return (
     <div
       className={twJoin(
         'p-3 bg-slate-800 border border-slate-700 rounded-md select-none flex gap-6 justify-between items-center hover:brightness-[90%] relative cursor-pointer transition-all rotate-0',
-        editMode && 'animate-wiggle'
+        editMode && 'animate-wiggle',
+        data.archived && 'opacity-50'
       )}
       style={{ animationDelay: `${Math.random() * 250}ms` }}
       tabIndex={0}
@@ -153,6 +156,35 @@ export function TokenCard({
           </div>
         </div>
       </div>
+
+      <button
+        className="remove absolute -top-3 right-6 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full sm:hover:bg-warning transition-all duration-300"
+        style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
+        tabIndex={editMode ? 0 : -1}
+        onClick={async (e) => {
+          e.stopPropagation();
+
+          const confirm = window.confirm(
+            `Are you sure you want to ${data.archived ? 'unarchive' : 'archive'} ${data.name}?`
+          );
+          if (confirm) {
+            // Remove old key
+            await updateDoc(userRef, {
+              keys: arrayRemove({ name: data.name, secret: data.secret, archived: data.archived }),
+            });
+
+            // Add new key with updated archived status
+            await updateDoc(userRef, {
+              keys: arrayUnion({ name: data.name, secret: data.secret, archived: !data.archived }),
+            });
+          }
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <FaArchive />
+      </button>
 
       <button
         className="remove absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white sm:hover:bg-danger transition-all duration-300"
