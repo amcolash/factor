@@ -1,8 +1,6 @@
-import { decrypt } from '@metamask/browser-passworder';
 import { DocumentReference, updateDoc } from 'firebase/firestore';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 import { useTailwindSize } from '~hooks/useTailwindSize';
 
 import { CodeContext } from '../contexts/CodeContext';
@@ -11,7 +9,7 @@ import { Key, UserData } from '../hooks/useUserData';
 import logo from '../images/logo.png';
 import { EditKey } from './EditKey';
 import { Modal } from './Modal';
-import { TokenCard, secretCache } from './TokenCard';
+import { TokenCard } from './TokenCard';
 
 export function TokenList({
   userData,
@@ -100,6 +98,7 @@ export function TokenList({
                   value={search}
                   placeholder="Search tokens"
                   onChange={(e) => setSearch(e.target.value)}
+                  autoFocus
                 />
                 <FaSearch className="fill-slate-400 absolute left-3 top-[11px] h-4" />
               </div>

@@ -1,11 +1,12 @@
 import { encrypt } from '@metamask/browser-passworder';
 import { User } from 'firebase/auth';
 import { setDoc, updateDoc } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { FaBroadcastTower } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
+import { useLockTimer } from '~hooks/useLockTimer';
 
 import { CodeContext } from '../contexts/CodeContext';
 import { useOnline } from '../hooks/useOnline';
@@ -84,9 +85,7 @@ function Authorized({ user }: { user: User }) {
   const [editMode, setEditMode] = useState(false);
   const [editKey, setEditKey] = useState(false);
 
-  useVisibilityChange((visible) => {
-    if (!visible) setToken(undefined);
-  });
+  useLockTimer(setToken);
 
   useEffect(() => {
     if (!loading && !error && !data) {
