@@ -1,4 +1,4 @@
-import { Scanner } from '@yudiel/react-qr-scanner';
+import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner';
 import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
@@ -12,7 +12,11 @@ export function QR({ close, onScan }: { close: () => void; onScan: (name: string
           </button>
         </div>
         <Scanner
-          onResult={async (text: string) => {
+          sound={false}
+          onScan={async (detectedCodes: IDetectedBarcode[]) => {
+            const text = detectedCodes[0]?.rawValue;
+            if (!text) return;
+
             try {
               const url = new URL(text);
 
@@ -28,8 +32,7 @@ export function QR({ close, onScan }: { close: () => void; onScan: (name: string
               toast.error('Failed to scan qr code');
             }
           }}
-          onError={(error) => console.error(error?.message)}
-          components={{ audio: false }}
+          onError={(error) => console.error(error)}
         />
       </div>
     </div>

@@ -11,7 +11,7 @@ export function PinCode({
   unlock,
   className,
 }: {
-  pinRef: React.RefObject<HTMLInputElement[]>;
+  pinRef: React.RefObject<HTMLInputElement[] | null>;
   encryptedCode: string;
   unlock: (code: string) => void;
   className?: string;

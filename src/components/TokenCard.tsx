@@ -41,6 +41,7 @@ export function TokenCard({
   const encryptionToken = useContext(CodeContext) || '';
   const [secret, setSecret] = useState(secretCache.get(data.name) || '');
   const [hidden, setHidden] = useState<HiddenType>(HiddenType.Hidden);
+  const [token, setToken] = useState('Token Error');
   const isMobile = useIsMobile();
   const [copy] = useCopyToClipboard();
 
@@ -93,21 +94,20 @@ export function TokenCard({
 
   const timeChunk = Math.floor(timestamp.getTime() / 30000);
 
-  const token = useMemo(() => {
-    if (secret.length === 0 || secret === 'Error' || hidden === HiddenType.Hidden) return 'Token Error';
+  useEffect(() => {
+    if (secret.length === 0 || secret === 'Error' || hidden === HiddenType.Hidden) setToken('Token Error');
 
-    try {
-      return TOTP.generate(secret.replace(/\s+/g, ''), { timestamp: timeChunk * 30000 }).otp;
-    } catch (err) {
-      console.error(err);
-      return 'Token Error';
-    }
+    TOTP.generate(secret.replace(/\s+/g, ''), { timestamp: timeChunk * 30000 })
+      .then(({ otp }) => setToken(otp))
+      .catch((err) => {
+        console.error(err);
+        setToken('Token Error');
+      });
   }, [secret, timeChunk, hidden]);
 
   const copyToken = useCallback(() => {
     copy(token).then((result) => {
-      if (result && token !== 'Token Error')
-        toast.success(data.name + ' code copied', { bodyClassName: isMobile ? 'text-right' : '', autoClose: 2500 });
+      if (result && token !== 'Token Error') toast.success(data.name + ' code copied', { autoClose: 2500 });
       else toast.error('Failed to copy code', { autoClose: 2500 });
     });
     addRecentKey(data.name);
