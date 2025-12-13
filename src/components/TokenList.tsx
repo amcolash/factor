@@ -19,6 +19,7 @@ export function TokenList({
   setEditMode,
   editKey,
   setEditKey,
+  lock,
 }: {
   userData: UserData;
   userRef: DocumentReference;
@@ -26,6 +27,7 @@ export function TokenList({
   setEditMode: (value: boolean) => void;
   editKey: boolean;
   setEditKey: (value: boolean) => void;
+  lock: () => void;
 }) {
   const { timestamp } = useRefreshTimer();
   const size = useTailwindSize();
@@ -92,7 +94,9 @@ export function TokenList({
         ) : (
           <div className="w-full max-w-screen-lg">
             <div className="flex gap-4 sm:gap-6 items-center mb-10">
-              <img src={logo} className="h-10 aspect-square -mb-0.5" />
+              <button onClick={lock} className="p-0 bg-transparent" title="Lock">
+                <img src={logo} className="h-10 aspect-square object-contain -mb-0.5" />
+              </button>
 
               <div className="relative w-full">
                 <input

@@ -67,13 +67,26 @@ async function promptPin(token?: string): Promise<string | undefined> {
 }
 
 function OnlineStatus({ className }: { className?: string }) {
+  const [toastShown, setToastShown] = useState(false);
   const online = useOnline();
+
+  const warning =
+    'It looks like you are currently offline. It is not recommend to add/edit keys offline to avoid sync conflicts.';
+
+  useEffect(() => {
+    if (!online && !toastShown) {
+      toast.error(warning, {
+        autoClose: 5000,
+      });
+      setToastShown(true);
+    }
+  }, [online, toastShown]);
 
   if (online) return null;
   return (
     <FaBroadcastTower
-      className={twMerge('text-danger fixed top-2 right-2 text-2xl z-10 ' + className)}
-      title="You are currently offline. It is not recommend to add/edit keys offline to avoid conflicts."
+      className={twMerge('text-danger fixed bottom-2 left-2 text-2xl z-20 ' + className)}
+      title={warning}
     />
   );
 }
@@ -116,7 +129,7 @@ function Authorized({ user }: { user: User }) {
   if (!token)
     return (
       <>
-        <OnlineStatus className="!bottom-4 !right-5 top-auto" />
+        <OnlineStatus className="!bottom-4 !left-4 top-auto" />
         <Lock unlock={(code) => setToken(code)} encryptedCode={data?.code!} data={data} userRef={userRef} />
       </>
     );
@@ -131,6 +144,7 @@ function Authorized({ user }: { user: User }) {
         setEditMode={setEditMode}
         editKey={editKey}
         setEditKey={setEditKey}
+        lock={() => setToken(undefined)}
       />
       <Progress />
       <Menu

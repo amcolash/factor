@@ -28,7 +28,7 @@ export interface Key {
 export function useUserData() {
   const [user] = useAuthState(auth);
   const userRef = doc(db, 'users', user?.uid || '') as DocumentReference<UserData>;
-  const [value, loading, error] = useDocumentData(userRef);
+  const [value, loading, error, snapshot] = useDocumentData(userRef);
 
   return { data: value, loading, error, userRef };
 }
