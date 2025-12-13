@@ -11,7 +11,7 @@ export function Modal({
 }): JSX.Element {
   return (
     <div
-      className="fixed z-10 inset-0 bg-slate-900 bg-opacity-75 flex justify-center items-center"
+      className="fixed z-30 inset-0 bg-slate-900 bg-opacity-75 flex justify-center items-center"
       onClick={onClose}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
