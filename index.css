@@ -55,3 +55,7 @@ button:focus {
 input {
   @apply appearance-none border border-slate-700 rounded w-full py-2 px-3 bg-slate-800 text-gray-200 leading-tight;
 }
+
+.text-shadow {
+  text-shadow: 0 0 6px #1e293b;
+}

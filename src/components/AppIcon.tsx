@@ -3,15 +3,18 @@ import { FaLock } from 'react-icons/fa';
 import * as icons from 'simple-icons';
 import { twJoin } from 'tailwind-merge';
 
+import accrue from '../images/accrue.svg?raw';
+import amazon from '../images/amazon.svg?raw';
 import bastillion from '../images/bastillion.png';
 import betterment from '../images/betterment.png';
 import carta from '../images/carta.png';
 import guideline from '../images/guideline.png';
 import idme from '../images/id.me.png';
 import justworks from '../images/justworks.jpg';
-import microsoft from '../images/microsoft.png';
+import microsoft from '../images/microsoft.svg?raw';
+import nintendo from '../images/nintendo.svg?raw';
 import sequoia from '../images/sequoia.png';
-import twitter from '../images/twitter.png';
+import twitter from '../images/twitter.svg?raw';
 import uwcu from '../images/uwcu.png';
 
 enum IconType {
@@ -24,12 +27,12 @@ interface Icon {
   hex: string;
   title: string;
   type: IconType.Icon;
-  padding?: boolean;
+  padding?: boolean | string;
 }
 
 interface Image {
   url: string;
-  padding?: boolean;
+  padding?: boolean | string;
   type: IconType.Image;
 }
 
@@ -51,6 +54,10 @@ function getIcon(name?: string): Icon | Image | undefined {
 
   // handle one-off cases
   switch (name.toLowerCase()) {
+    case 'accrue':
+      return { svg: accrue, title: 'Accrue', hex: 'ffffff', padding: 'p-2', type: IconType.Icon };
+    case 'amazon':
+      return { svg: amazon, title: 'Amazon', hex: 'ff9900', padding: true, type: IconType.Icon };
     case 'bastillion':
       return { url: bastillion, padding: true, type: IconType.Image };
     case 'betterment':
@@ -66,17 +73,19 @@ function getIcon(name?: string): Icon | Image | undefined {
     case 'justworks':
       return { url: justworks, type: IconType.Image };
     case 'microsoft':
-      return { url: microsoft, padding: true, type: IconType.Image };
+      return { svg: microsoft, title: 'Microsoft', hex: '727272', padding: 'p-1.5', type: IconType.Icon };
+    case 'nintendo':
+      return { svg: nintendo, title: 'Nintendo', hex: 'dd2020', padding: 'p-1', type: IconType.Icon };
     case 'nas':
     case 'synology':
-      return { ...icons.siSynology, type: IconType.Icon };
+      return { ...icons.siSynology, padding: 'p-1.5', type: IconType.Icon };
     case 'uw credit union':
     case 'uwcu':
       return { url: uwcu, padding: true, type: IconType.Image };
     case 'sequoia':
       return { url: sequoia, padding: true, type: IconType.Image };
     case 'twitter':
-      return { url: twitter, padding: true, type: IconType.Image };
+      return { svg: twitter, title: 'Twitter', hex: '00aced', padding: true, type: IconType.Icon };
     default:
       break;
   }
@@ -95,9 +104,6 @@ function getColors(i?: Icon | Image): { background: string; fill?: string } {
 
   // handle one-off cases
   switch (icon.title.toLowerCase()) {
-    case 'amazon':
-      background = darkColor;
-      break;
     case 'epic games':
       fill = 'white';
       break;
@@ -122,20 +128,24 @@ export function AppIcon({ name, className }: { name: string; className?: string 
     ' ' +
     className;
 
-  if (!icon)
+  if (!icon) {
+    console.warn(`No icon found for ${name}`);
     return (
       <div className={imgClass}>
         <FaLock />
       </div>
     );
+  }
+
+  const padding = typeof icon.padding === 'string' ? icon.padding : undefined;
 
   if (icon.type === IconType.Image)
-    return <img src={icon.url} className={twJoin(imgClass, 'object-cover', icon.padding && 'p-1')} />;
+    return <img src={icon.url} className={twJoin(imgClass, 'object-cover', padding || (icon.padding && 'p-1'))} />;
 
   return (
     <div
       dangerouslySetInnerHTML={{ __html: icon.svg }}
-      className={twJoin(imgClass, icon.padding ? 'p-2.5' : 'p-0.5')}
+      className={twJoin(imgClass, padding || (icon.padding ? 'p-2.5' : 'p-0.5'))}
       style={{ fill: colors.fill }}
     />
   );

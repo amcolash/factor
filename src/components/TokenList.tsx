@@ -1,6 +1,7 @@
 import { DocumentReference, updateDoc } from 'firebase/firestore';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
+import { twMerge } from 'tailwind-merge';
 import { useTailwindSize } from '~hooks/useTailwindSize';
 
 import { CodeContext } from '../contexts/CodeContext';
@@ -32,6 +33,7 @@ export function TokenList({
   const encryptionToken = useContext(CodeContext) || '';
 
   const [search, setSearch] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [keyToEdit, setKeyToEdit] = useState<Key>();
 
   useEffect(() => {
@@ -79,7 +81,8 @@ export function TokenList({
     [encryptionToken, setEditKey, setKeyToEdit]
   );
 
-  const gridClass = 'w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6';
+  const gridClass =
+    'w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 transition-all';
 
   return (
     <>
@@ -99,13 +102,20 @@ export function TokenList({
                   placeholder="Search tokens"
                   onChange={(e) => setSearch(e.target.value)}
                   autoFocus
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setSearchFocused(false)}
                 />
                 <FaSearch className="fill-slate-400 absolute left-3 top-[11px] h-4" />
               </div>
             </div>
 
             {userData.recentKeys.length > 0 && search.length === 0 && (
-              <div className="grid gap-4 sm:gap-6 mb-4 sm:mb-6">
+              <div
+                className={twMerge(
+                  'grid gap-4 sm:gap-6 mb-4 sm:mb-6 transition-all',
+                  searchFocused && 'opacity-50 blur-sm'
+                )}
+              >
                 <h2 className="m-0 text-xl leading-none">Recently Used</h2>
                 <div className={gridClass}>
                   {userData.recentKeys.slice(0, size === 'sm' || size === 'lg' ? 3 : 4).map((name: string) => {
@@ -129,7 +139,7 @@ export function TokenList({
               </div>
             )}
 
-            <div className={gridClass}>
+            <div className={twMerge(gridClass, searchFocused && search.length === 0 && 'opacity-50 blur-sm')}>
               {userData.keys
                 .filter(
                   (k) => (search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase())) && !k.archived

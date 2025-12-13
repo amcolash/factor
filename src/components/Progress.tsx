@@ -30,6 +30,7 @@ export function Progress() {
             textColor: tailwind.theme.colors.primary,
             pathColor: tailwind.theme.colors.primary,
           })}
+          className="text-shadow"
           strokeWidth={10}
         />
       </div>
