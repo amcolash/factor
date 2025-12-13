@@ -104,7 +104,7 @@ export function TokenList({
               </div>
             </div>
 
-            {userData.recentKeys.length > 0 && (
+            {userData.recentKeys.length > 0 && search.length === 0 && (
               <div className="grid gap-4 sm:gap-6 mb-4 sm:mb-6">
                 <h2 className="m-0 text-xl leading-none">Recently Used</h2>
                 <div className={gridClass}>
