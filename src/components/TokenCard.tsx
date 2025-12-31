@@ -95,7 +95,10 @@ export function TokenCard({
   const timeChunk = Math.floor(timestamp.getTime() / 30000);
 
   useEffect(() => {
-    if (secret.length === 0 || secret === 'Error' || hidden === HiddenType.Hidden) setToken('Token Error');
+    if (secret.length === 0 || secret === 'Error' || hidden === HiddenType.Hidden) {
+      setToken('Token Error');
+      return;
+    }
 
     TOTP.generate(secret.replace(/\s+/g, ''), { timestamp: timeChunk * 30000 })
       .then(({ otp }) => setToken(otp))

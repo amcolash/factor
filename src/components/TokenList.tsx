@@ -105,7 +105,7 @@ export function TokenList({
                   value={search}
                   placeholder="Search tokens"
                   onChange={(e) => setSearch(e.target.value)}
-                  autoFocus
+                  autoFocus={process.env.NODE_ENV !== 'development'}
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
                 />
