@@ -136,6 +136,9 @@ export default defineConfig({
     },
     sourcemap: true,
   },
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
   define: {
     __BUILD_TIME__: new Date(),
   },
