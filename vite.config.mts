@@ -127,7 +127,7 @@ export default defineConfig({
           if (id.includes('@metamask') || id.includes('lodash')) return 'metamask';
           if (id.includes('@yudiel/react-qr-scanner')) return 'qr-scanner';
           if (id.includes('simple-icons')) return 'simple-icons';
-          if (id.includes('/react/') || id.includes('react-dom')) return 'react';
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) return 'react';
           if (id.includes('node_modules')) return 'vendor';
 
           return 'index';
