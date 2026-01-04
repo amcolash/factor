@@ -123,21 +123,19 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id: string) => {
-          if (id.includes('@firebase')) return 'firebase';
-          if (id.includes('@metamask') || id.includes('lodash')) return 'metamask';
-          if (id.includes('@yudiel/react-qr-scanner')) return 'qr-scanner';
-          if (id.includes('simple-icons')) return 'simple-icons';
-          // if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) return 'react-libs';
-          if (id.includes('node_modules')) return 'vendor';
+          if (id.includes('node_modules/')) {
+            if (id.includes('@firebase')) return 'firebase';
+            if (id.includes('@metamask') || id.includes('lodash')) return 'metamask';
+            if (id.includes('@yudiel/react-qr-scanner')) return 'qr-scanner';
+            if (id.includes('simple-icons')) return 'simple-icons';
+            return 'vendor';
+          }
 
           return 'index';
         },
       },
     },
     sourcemap: true,
-  },
-  resolve: {
-    dedupe: ['react', 'react-dom'],
   },
   define: {
     __BUILD_TIME__: new Date(),
