@@ -130,7 +130,7 @@ function Authorized({ user }: { user: User }) {
     return (
       <>
         <OnlineStatus className="!bottom-4 !left-4 top-auto" />
-        <Lock unlock={(code) => setToken(code)} encryptedCode={data?.code!} data={data} userRef={userRef} />
+        <Lock unlock={(code) => setToken(code)} encryptedCode={data?.code} data={data} userRef={userRef} />
       </>
     );
 

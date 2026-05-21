@@ -116,7 +116,7 @@ export default defineConfig({
   base: '/factor/',
   build: {
     modulePreload: {
-      resolveDependencies: (url, deps, context) => {
+      resolveDependencies: (_url, _deps, _context) => {
         return [];
       },
     },

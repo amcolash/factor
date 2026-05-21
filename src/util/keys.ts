@@ -36,7 +36,7 @@ export async function exportKeys(token: string, data: UserData): Promise<void> {
 export async function importKeys(token: string, data: UserData, userRef: DocumentReference): Promise<void> {
   const input = document.createElement('input');
   input.type = 'file';
-  input.addEventListener('change', (e) => {
+  input.addEventListener('change', () => {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       // Read JSON file
