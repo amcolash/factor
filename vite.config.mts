@@ -126,14 +126,12 @@ export default defineConfig({
       output: {
         manualChunks: (id: string) => {
           if (id.includes('node_modules/')) {
-            if (id.includes('@firebase')) return 'firebase';
+            if (id.includes('firebase')) return 'firebase';
             if (id.includes('@metamask') || id.includes('lodash')) return 'metamask';
             if (id.includes('@yudiel/react-qr-scanner')) return 'qr-scanner';
             if (id.includes('simple-icons')) return 'simple-icons';
             return 'vendor';
           }
-
-          return 'index';
         },
       },
     },
