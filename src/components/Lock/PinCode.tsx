@@ -48,7 +48,7 @@ export function PinCode({
     <div className={twMerge('flex', className)}>
       <PinField
         length={6}
-        className="border border-slate-500 w-10 sm:w-12 h-14 m-1.5 rounded-lg text-center text-6xl p-1 focus-visible:ring-3"
+        className="m-1.5 h-14 w-10 rounded-lg border border-slate-500 p-1 text-center text-6xl focus-visible:ring-3 sm:w-12"
         type="password"
         inputMode="numeric"
         ref={pinRef}

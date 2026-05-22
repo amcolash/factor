@@ -2,7 +2,7 @@ import { DocumentReference, arrayUnion, updateDoc } from '@firebase/firestore';
 import { decrypt, encrypt } from '@metamask/browser-passworder';
 import { toast } from 'react-toastify';
 
-import { Key, UserData } from '../hooks/useUserData';
+import { Key, UserData } from 'hooks/useUserData';
 
 export async function exportKeys(token: string, data: UserData): Promise<void> {
   const toastId = toast('Exporting keys ⏳️\nThis might take some time...', {

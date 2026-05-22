@@ -1,10 +1,11 @@
 import { DocumentReference } from 'firebase/firestore';
 import { useRef } from 'react';
 
-// import { OS, useOsType } from '../../hooks/useOsType';
-import { useUUID } from '../../hooks/useUUID';
-import { UserData } from '../../hooks/useUserData';
-import { LogoPage } from '../Logo';
+import { LogoPage } from 'components/Logo';
+// import { OS, useOsType } from 'hooks/useOsType';
+import { useUUID } from 'hooks/useUUID';
+import { UserData } from 'hooks/useUserData';
+
 import { Logout } from './Logout';
 import { PinCode } from './PinCode';
 import { WebauthnEnroll } from './WebauthnEnroll';
@@ -43,7 +44,7 @@ export function Lock({
       }}
       style={{ marginTop: 'calc(-1 * env(keyboard-inset-height) / 2)' }}
     >
-      <div className="flex fixed top-4 right-4 gap-2">
+      <div className="fixed top-4 right-4 flex gap-2">
         {webauthnEnabled && !webauthn && <WebauthnEnroll encryptedCode={encryptedCode} userRef={userRef} />}
         <Logout />
       </div>

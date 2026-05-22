@@ -3,8 +3,8 @@ import { DocumentReference, arrayUnion, updateDoc } from 'firebase/firestore';
 import { FaFingerprint } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-import { useUUID } from '../../hooks/useUUID';
-import { register } from '../../util/webauthn';
+import { useUUID } from 'hooks/useUUID';
+import { register } from 'util/webauthn';
 
 export function WebauthnEnroll({ userRef, encryptedCode }: { userRef: DocumentReference; encryptedCode: string }) {
   const uuid = useUUID();

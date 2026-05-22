@@ -4,7 +4,8 @@ import { useContext, useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash, FaQrcode } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-import { CodeContext } from '../contexts/CodeContext';
+import { CodeContext } from 'contexts/CodeContext';
+
 import { AppIcon } from './AppIcon';
 import { QR } from './QR';
 import { secretCache } from './TokenCard';
@@ -94,9 +95,9 @@ export function EditKey(props: EditKeyProps) {
           if (e.key === 'Enter') addKey(name, secret);
         }}
       >
-        <div className="flex gap-4 items-center">
-          <AppIcon name={name} className="w-14 h-14 sm:w-16 sm:h-16" />
-          <div className="flex flex-col gap-3 w-full">
+        <div className="flex items-center gap-4">
+          <AppIcon name={name} className="h-14 w-14 sm:h-16 sm:w-16" />
+          <div className="flex w-full flex-col gap-3">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -116,7 +117,7 @@ export function EditKey(props: EditKeyProps) {
                 disabled={decrypting}
               />
               <button
-                className="absolute right-0 top-0 bottom-0 flex items-center cursor-pointer bg-transparent"
+                className="absolute top-0 right-0 bottom-0 flex cursor-pointer items-center bg-transparent"
                 onClick={() => setMasked(!masked)}
               >
                 {masked ? <FaEyeSlash /> : <FaEye />}

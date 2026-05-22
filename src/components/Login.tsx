@@ -1,6 +1,7 @@
 import { useAuthState, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 
-import { auth } from '../util/firebase';
+import { auth } from 'util/firebase';
+
 import './Login.css';
 
 export function Login() {
@@ -8,7 +9,7 @@ export function Login() {
   const [signInWithGoogle, , loading, error] = useSignInWithGoogle(auth);
 
   return (
-    <div className="flex justify-center items-center flex-col">
+    <div className="flex flex-col items-center justify-center">
       {!user && !loading && <GoogleLogin signin={() => signInWithGoogle()} />}
 
       {loading && <p>Loading...</p>}

@@ -1,7 +1,7 @@
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-import { useSecondTimer } from '../hooks/useRefreshTimer';
+import { useSecondTimer } from 'hooks/useRefreshTimer';
 
 export function Progress() {
   const { time } = useSecondTimer();
@@ -15,8 +15,8 @@ export function Progress() {
   const progressOffset = ((elapsedSeconds + 0.15) / 29.4) * 50;
 
   return (
-    <div className="flex sm:justify-center pl-8 sm:pl-0 fixed bottom-0 left-0 right-0 z-10 backdrop-blur-lg bg-slate-900/30 pt-4 border-t-2 border-secondary">
-      <div className="w-16 h-16 p-1 mb-6">
+    <div className="border-secondary fixed right-0 bottom-0 left-0 z-10 flex border-t-2 bg-slate-900/30 pt-4 pl-8 backdrop-blur-lg sm:justify-center sm:pl-0">
+      <div className="mb-6 h-16 w-16 p-1">
         <CircularProgressbar
           value={remainingSeconds - 1}
           maxValue={30}
@@ -32,7 +32,7 @@ export function Progress() {
         />
       </div>
       <div
-        className="fixed bottom-1 h-1.5 bg-primary transition-all duration-700 z-20 rounded-sm"
+        className="bg-primary fixed bottom-1 z-20 h-1.5 rounded-sm transition-all duration-700"
         style={{ left: `${progressOffset}%`, right: `${progressOffset}%` }}
       ></div>
     </div>

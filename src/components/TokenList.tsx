@@ -2,12 +2,13 @@ import { DocumentReference, updateDoc } from 'firebase/firestore';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
-import { useTailwindSize } from '~hooks/useTailwindSize';
 
-import { CodeContext } from '../contexts/CodeContext';
-import { useRefreshTimer } from '../hooks/useRefreshTimer';
-import { Key, UserData } from '../hooks/useUserData';
-import logo from '../images/logo.png';
+import { CodeContext } from 'contexts/CodeContext';
+import { useRefreshTimer } from 'hooks/useRefreshTimer';
+import { useTailwindSize } from 'hooks/useTailwindSize';
+import { Key, UserData } from 'hooks/useUserData';
+import logo from 'images/logo.png';
+
 import { EditKey } from './EditKey';
 import { Modal } from './Modal';
 import { TokenCard } from './TokenCard';
@@ -88,19 +89,19 @@ export function TokenList({
 
   return (
     <>
-      <div className="flex flex-col gap-4 m-6 sm:m-8 items-center pb-24">
+      <div className="m-6 flex flex-col items-center gap-4 pb-24 sm:m-8">
         {userData.keys?.length === 0 ? (
-          <div className="text-center text-lg bg-slate-800 p-8 w-full rounded-md">No keys added yet</div>
+          <div className="w-full rounded-md bg-slate-800 p-8 text-center text-lg">No keys added yet</div>
         ) : (
           <div className="w-full max-w-(--breakpoint-lg)">
-            <div className="flex gap-4 sm:gap-6 items-center mb-10">
-              <button onClick={lock} className="p-0 bg-transparent" title="Lock">
-                <img src={logo} className="h-10 aspect-square object-contain -mb-0.5" />
+            <div className="mb-10 flex items-center gap-4 sm:gap-6">
+              <button onClick={lock} className="bg-transparent p-0" title="Lock">
+                <img src={logo} className="-mb-0.5 aspect-square h-10 object-contain" />
               </button>
 
               <div className="relative w-full">
                 <input
-                  className="pl-10 bg-slate-700/20 hover:bg-slate-600/30 focus-within:bg-slate-600/30 shadow-centered transition-all"
+                  className="shadow-centered bg-slate-700/20 pl-10 transition-all focus-within:bg-slate-600/30 hover:bg-slate-600/30"
                   type="search"
                   value={search}
                   placeholder="Search tokens"
@@ -108,14 +109,14 @@ export function TokenList({
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
                 />
-                <FaSearch className="fill-slate-400 absolute left-3 top-2.75 h-4" />
+                <FaSearch className="absolute top-2.75 left-3 h-4 fill-slate-400" />
               </div>
             </div>
 
             {userData.recentKeys.length > 0 && search.length === 0 && (
               <div
                 className={twMerge(
-                  'grid gap-4 sm:gap-6 mb-4 sm:mb-6 transition-all',
+                  'mb-4 grid gap-4 transition-all sm:mb-6 sm:gap-6',
                   searchFocused && 'opacity-50 blur-xs'
                 )}
               >
@@ -163,8 +164,8 @@ export function TokenList({
             </div>
 
             {editMode && (
-              <div className="mt-4 pt-4 sm:mt-6 sm:pt-6 border-t-2 border-slate-700">
-                <h2 className="mb-4 sm:mb-6 text-xl leading-none">Archived Tokens</h2>
+              <div className="mt-4 border-t-2 border-slate-700 pt-4 sm:mt-6 sm:pt-6">
+                <h2 className="mb-4 text-xl leading-none sm:mb-6">Archived Tokens</h2>
                 <div className={gridClass}>
                   {userData.keys
                     .filter(

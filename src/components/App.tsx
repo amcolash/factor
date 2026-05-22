@@ -6,15 +6,16 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { FaBroadcastTower } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
-import { useLockTimer } from '~hooks/useLockTimer';
-import { useMigrateData } from '~hooks/useMigrateData';
 
-import { CodeContext } from '../contexts/CodeContext';
-import { useOnline } from '../hooks/useOnline';
-import { useServiceWorker } from '../hooks/useServiceWorker';
-import { useUserData } from '../hooks/useUserData';
-import { auth } from '../util/firebase';
-import { exportKeys, importKeys } from '../util/keys';
+import { CodeContext } from 'contexts/CodeContext';
+import { useLockTimer } from 'hooks/useLockTimer';
+import { useMigrateData } from 'hooks/useMigrateData';
+import { useOnline } from 'hooks/useOnline';
+import { useServiceWorker } from 'hooks/useServiceWorker';
+import { useUserData } from 'hooks/useUserData';
+import { auth } from 'util/firebase';
+import { exportKeys, importKeys } from 'util/keys';
+
 import { Lock } from './Lock/Lock';
 import { Login } from './Login';
 import { LogoPage } from './Logo';
@@ -85,7 +86,7 @@ function OnlineStatus({ className }: { className?: string }) {
   if (online) return null;
   return (
     <FaBroadcastTower
-      className={twMerge('text-danger fixed bottom-2 left-2 text-2xl z-20 ' + className)}
+      className={twMerge('text-danger fixed bottom-2 left-2 z-20 text-2xl', className)}
       title={warning}
     />
   );
@@ -129,7 +130,7 @@ function Authorized({ user }: { user: User }) {
   if (!token)
     return (
       <>
-        <OnlineStatus className="bottom-4! left-4! top-auto" />
+        <OnlineStatus className="top-auto bottom-4! left-4!" />
         <Lock unlock={(code) => setToken(code)} encryptedCode={data?.code} data={data} userRef={userRef} />
       </>
     );

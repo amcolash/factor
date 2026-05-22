@@ -3,11 +3,11 @@ import { DocumentReference, arrayRemove, updateDoc } from 'firebase/firestore';
 import { FaFingerprint } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-import { useEffectOnce } from '../../hooks/useEffectOnce';
-import { useOnHold } from '../../hooks/useOnHold';
-import { Auth } from '../../hooks/useUserData';
-import { useVisibilityChange } from '../../hooks/useVisibilityChange';
-import { authenticate } from '../../util/webauthn';
+import { useEffectOnce } from 'hooks/useEffectOnce';
+import { useOnHold } from 'hooks/useOnHold';
+import { Auth } from 'hooks/useUserData';
+import { useVisibilityChange } from 'hooks/useVisibilityChange';
+import { authenticate } from 'util/webauthn';
 
 export function WebauthnLogin({
   webauthn,
@@ -56,7 +56,7 @@ export function WebauthnLogin({
   };
 
   return (
-    <button className="p-3 rounded-full bg-tertiary text-slate-200 border-2 border-slate-600" {...bindHold()}>
+    <button className="bg-tertiary rounded-full border-2 border-slate-600 p-3 text-slate-200" {...bindHold()}>
       <FaFingerprint size={30} />
     </button>
   );

@@ -1,7 +1,7 @@
 import { FaLock, FaPlus, FaSave, FaUpload } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
 
-import { useOnHold } from '../hooks/useOnHold';
+import { useOnHold } from 'hooks/useOnHold';
 
 export function Menu({
   lock,
@@ -36,7 +36,7 @@ export function Menu({
   );
 
   return (
-    <div className="fixed bottom-8 right-8 flex gap-4 z-20">
+    <div className="fixed right-8 bottom-8 z-20 flex gap-4">
       {editMode && (
         <>
           <button className={buttonColor} onClick={() => importKeys()}>

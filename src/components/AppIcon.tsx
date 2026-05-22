@@ -3,20 +3,20 @@ import { FaLock } from 'react-icons/fa';
 import * as icons from 'simple-icons';
 import { twMerge } from 'tailwind-merge';
 
-import accrue from '../images/accrue.svg?raw';
-import amazon from '../images/amazon.svg?raw';
-import bastillion from '../images/bastillion.png';
-import betterment from '../images/betterment.png';
-import carta from '../images/carta.png';
-import guideline from '../images/guideline.png';
-import headway from '../images/headway.svg';
-import idme from '../images/id.me.png';
-import justworks from '../images/justworks.jpg';
-import microsoft from '../images/microsoft.svg?raw';
-import nintendo from '../images/nintendo.svg?raw';
-import sequoia from '../images/sequoia.png';
-import twitter from '../images/twitter.svg?raw';
-import uwcu from '../images/uwcu.png';
+import accrue from 'images/accrue.svg?raw';
+import amazon from 'images/amazon.svg?raw';
+import bastillion from 'images/bastillion.png';
+import betterment from 'images/betterment.png';
+import carta from 'images/carta.png';
+import guideline from 'images/guideline.png';
+import headway from 'images/headway.svg';
+import idme from 'images/id.me.png';
+import justworks from 'images/justworks.jpg';
+import microsoft from 'images/microsoft.svg?raw';
+import nintendo from 'images/nintendo.svg?raw';
+import sequoia from 'images/sequoia.png';
+import twitter from 'images/twitter.svg?raw';
+import uwcu from 'images/uwcu.png';
 
 enum IconType {
   Icon = 'Icon',

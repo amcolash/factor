@@ -6,11 +6,12 @@ import { toast } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
 import { TOTP } from 'totp-generator';
 
-import { CodeContext } from '../contexts/CodeContext';
-import { useCopyToClipboard } from '../hooks/useCopyToClipboard';
-import { useIsMobile } from '../hooks/useIsMobile';
-import { useOnHold } from '../hooks/useOnHold';
-import { Key } from '../hooks/useUserData';
+import { CodeContext } from 'contexts/CodeContext';
+import { useCopyToClipboard } from 'hooks/useCopyToClipboard';
+import { useIsMobile } from 'hooks/useIsMobile';
+import { useOnHold } from 'hooks/useOnHold';
+import { Key } from 'hooks/useUserData';
+
 import { AppIcon } from './AppIcon';
 
 enum HiddenType {
@@ -128,7 +129,7 @@ export function TokenCard({
   return (
     <div
       className={twMerge(
-        'p-3 bg-slate-800/30 border border-slate-700 shadow-centered rounded-lg select-none flex gap-6 justify-between items-center relative cursor-pointer transition-all duration-300 rotate-0 hover:bg-slate-700/40',
+        'shadow-centered relative flex rotate-0 cursor-pointer items-center justify-between gap-6 rounded-lg border border-slate-700 bg-slate-800/30 p-3 transition-all duration-300 select-none hover:bg-slate-700/40',
         editMode && 'animate-wiggle',
         data.archived && 'opacity-50'
       )}
@@ -161,7 +162,7 @@ export function TokenCard({
       </div>
 
       <button
-        className="remove absolute -top-3 right-6 p-1! text-slate-800 bg-white border border-slate-400 rounded-full sm:hover:bg-warning transition-all duration-300"
+        className="remove sm:hover:bg-warning absolute -top-3 right-6 rounded-full border border-slate-400 bg-white p-1! text-slate-800 transition-all duration-300"
         style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
         tabIndex={editMode ? 0 : -1}
         onClick={async (e) => {
@@ -190,7 +191,7 @@ export function TokenCard({
       </button>
 
       <button
-        className="remove absolute -top-3 -right-3 p-1! text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white sm:hover:bg-danger transition-all duration-300"
+        className="remove sm:hover:bg-danger absolute -top-3 -right-3 rounded-full border border-slate-400 bg-white p-1! text-slate-800 transition-all duration-300 hover:text-white"
         style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
         tabIndex={editMode ? 0 : -1}
         onClick={(e) => {

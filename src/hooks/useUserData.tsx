@@ -2,7 +2,7 @@ import { DocumentReference, doc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-import { auth, db } from '../util/firebase';
+import { auth, db } from 'util/firebase';
 
 export interface UserData {
   email: string;
