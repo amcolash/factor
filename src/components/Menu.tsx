@@ -1,5 +1,5 @@
 import { FaLock, FaPlus, FaSave, FaUpload } from 'react-icons/fa';
-import { twJoin } from 'tailwind-merge';
+import { twMerge } from 'tailwind-merge';
 
 import { useOnHold } from '../hooks/useOnHold';
 
@@ -21,7 +21,7 @@ export function Menu({
   importKeys: () => void;
 }) {
   const buttonClass = 'p-4 rounded-full ';
-  const buttonColor = buttonClass + ' !bg-slate-800 !text-primary';
+  const buttonColor = buttonClass + ' bg-slate-800! text-primary!';
 
   const bindLock = useOnHold(updateCode, lock);
   const bindPlus = useOnHold(
@@ -47,10 +47,10 @@ export function Menu({
           </button>
         </>
       )}
-      <button className={twJoin(buttonColor, editMode && 'rotate-45')} {...bindPlus()}>
+      <button className={twMerge(buttonColor, editMode && 'rotate-45')} {...bindPlus()}>
         <FaPlus />
       </button>
-      <button className={twJoin('transition-transform', buttonClass)} {...bindLock()}>
+      <button className={twMerge('transition-transform', buttonClass)} {...bindLock()}>
         <FaLock />
       </button>
     </div>

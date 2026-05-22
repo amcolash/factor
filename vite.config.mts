@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
@@ -147,6 +148,7 @@ export default defineConfig({
   plugins: [
     react(),
     tsconfigPaths(),
+    tailwindcss(),
     VitePWA({
       workbox: {
         // cache all imports

@@ -1,7 +1,7 @@
 import levenshtein from 'js-levenshtein';
 import { FaLock } from 'react-icons/fa';
 import * as icons from 'simple-icons';
-import { twJoin } from 'tailwind-merge';
+import { twMerge } from 'tailwind-merge';
 
 import accrue from '../images/accrue.svg?raw';
 import amazon from '../images/amazon.svg?raw';
@@ -97,9 +97,10 @@ function getIcon(name?: string): Icon | Image | undefined {
 }
 
 const darkColor = 'bg-slate-900';
-const lightColor = 'bg-slate-800';
+const lightColor = 'bg-slate-100';
+
 function getColors(i?: Icon | Image): { background: string; fill?: string } {
-  if (!i || i.type === IconType.Image) return { background: darkColor, fill: lightColor };
+  if (!i || i.type === IconType.Image) return { background: darkColor };
 
   const icon = i as Icon;
   let background = darkColor;
@@ -108,12 +109,10 @@ function getColors(i?: Icon | Image): { background: string; fill?: string } {
   // handle one-off cases
   switch (icon.title.toLowerCase()) {
     case 'epic games':
-      fill = 'white';
-      break;
     case 'github':
     case 'patreon':
     case 'ubisoft':
-      background = 'bg-slate-100';
+      background = lightColor;
       break;
   }
 
@@ -125,11 +124,11 @@ export function AppIcon({ name, className }: { name: string; className?: string 
 
   const colors = getColors(icon);
 
-  const imgClass =
-    'w-12 h-12 rounded-full border border-slate-400 flex justify-center items-center aspect-square ' +
-    colors.background +
-    ' ' +
-    className;
+  const imgClass = twMerge(
+    'w-12 h-12 rounded-full border border-slate-400 flex justify-center items-center aspect-square',
+    colors.background,
+    className
+  );
 
   if (!icon) {
     if (name) console.warn(`No icon found for ${name}`);
@@ -143,12 +142,12 @@ export function AppIcon({ name, className }: { name: string; className?: string 
   const padding = typeof icon.padding === 'string' ? icon.padding : undefined;
 
   if (icon.type === IconType.Image)
-    return <img src={icon.url} className={twJoin(imgClass, 'object-cover', padding || (icon.padding && 'p-1'))} />;
+    return <img src={icon.url} className={twMerge(imgClass, 'object-cover', padding || (icon.padding && 'p-1'))} />;
 
   return (
     <div
       dangerouslySetInnerHTML={{ __html: icon.svg }}
-      className={twJoin(imgClass, padding || (icon.padding ? 'p-2.5' : 'p-0.5'))}
+      className={twMerge(imgClass, padding || (icon.padding ? 'p-2.5' : 'p-0.5'))}
       style={{ fill: colors.fill }}
     />
   );

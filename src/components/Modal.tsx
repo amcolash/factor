@@ -17,7 +17,7 @@ export function Modal({
   return (
     <div
       className={twMerge(
-        'fixed z-30 inset-0 bg-slate-900/75 flex justify-center items-center backdrop-blur-sm transition-all',
+        'fixed z-30 inset-0 bg-slate-900/75 flex justify-center items-center backdrop-blur-xs transition-all',
         !open && 'pointer-events-none opacity-0'
       )}
       onClick={onClose}

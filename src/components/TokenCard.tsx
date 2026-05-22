@@ -3,7 +3,7 @@ import { DocumentReference, arrayRemove, arrayUnion, updateDoc } from 'firebase/
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { FaArchive, FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { twJoin } from 'tailwind-merge';
+import { twMerge } from 'tailwind-merge';
 import { TOTP } from 'totp-generator';
 
 import { CodeContext } from '../contexts/CodeContext';
@@ -127,8 +127,8 @@ export function TokenCard({
 
   return (
     <div
-      className={twJoin(
-        'p-3 bg-slate-800 border border-slate-700 shadow-centered rounded-lg select-none flex gap-6 justify-between items-center relative cursor-pointer transition-all duration-300 rotate-0 bg-opacity-30 hover:bg-slate-700 hover:bg-opacity-40',
+      className={twMerge(
+        'p-3 bg-slate-800/30 border border-slate-700 shadow-centered rounded-lg select-none flex gap-6 justify-between items-center relative cursor-pointer transition-all duration-300 rotate-0 hover:bg-slate-700/40',
         editMode && 'animate-wiggle',
         data.archived && 'opacity-50'
       )}
@@ -161,7 +161,7 @@ export function TokenCard({
       </div>
 
       <button
-        className="remove absolute -top-3 right-6 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full sm:hover:bg-warning transition-all duration-300"
+        className="remove absolute -top-3 right-6 p-1! text-slate-800 bg-white border border-slate-400 rounded-full sm:hover:bg-warning transition-all duration-300"
         style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
         tabIndex={editMode ? 0 : -1}
         onClick={async (e) => {
@@ -190,7 +190,7 @@ export function TokenCard({
       </button>
 
       <button
-        className="remove absolute -top-3 -right-3 !p-1 text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white sm:hover:bg-danger transition-all duration-300"
+        className="remove absolute -top-3 -right-3 p-1! text-slate-800 bg-white border border-slate-400 rounded-full hover:text-white sm:hover:bg-danger transition-all duration-300"
         style={{ pointerEvents: editMode ? 'auto' : 'none', opacity: editMode ? 1 : 0 }}
         tabIndex={editMode ? 0 : -1}
         onClick={(e) => {

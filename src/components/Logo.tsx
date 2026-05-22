@@ -1,4 +1,4 @@
-import { twJoin, twMerge } from 'tailwind-merge';
+import { twMerge } from 'tailwind-merge';
 
 import image from '../images/logo.png';
 
@@ -16,13 +16,13 @@ export function LogoPage({
   [key: string]: any;
 }) {
   return (
-    <div className="w-screen h-[100svh] flex flex-col justify-center items-center gap-5" {...props}>
+    <div className="w-screen h-svh flex flex-col justify-center items-center gap-5" {...props}>
       <h1 className="text-center m-0 -mb-1">Factor 2FA</h1>
       <Logo className={className} />
       {children}
 
       <span
-        className={twJoin(
+        className={twMerge(
           'absolute bottom-1.5 right-2 leading-tight whitespace-pre text-right',
           process.env.NODE_ENV === 'production' ? 'text-[8px]' : 'text-sm'
         )}

@@ -1,54 +1,75 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap') layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400&display=swap') layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-html {
-  @apply text-white min-h-screen select-none;
-  font-family: 'Ubuntu', sans-serif;
+@theme {
+  --color-primary: #4b888d;
+  --color-secondary: #051524;
+  --color-tertiary: #2c2155;
+  --color-danger: #f07f7b;
+  --color-warning: #f0c27b;
+
+  --shadow-centered: 0 0 4px #334155;
+
+  --animate-wiggle: wiggle 400ms ease-in-out infinite;
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-0.5deg);
+    }
+    50% {
+      transform: rotate(0.5deg);
+    }
+  }
 }
 
-/* This ensures that the gradient never overscrolls. Tip from: https://stackoverflow.com/a/78145994/2303432 */
-html:before {
-  @apply bg-gradient-to-tr from-secondary via-secondary to-tertiary fixed inset-0 -z-10;
-  content: '';
+@layer base {
+  html {
+    @apply text-white min-h-screen select-none;
+    font-family: 'Ubuntu', sans-serif;
+  }
+
+  /* This ensures that the gradient never overscrolls. Tip from: https://stackoverflow.com/a/78145994/2303432 */
+  html:before {
+    @apply bg-linear-to-tr from-secondary via-secondary to-tertiary fixed inset-0 -z-10 content-[''];
+  }
+
+  h1 {
+    @apply text-7xl;
+    font-family: 'Teko', sans-serif;
+  }
+
+  :focus-visible {
+    @apply outline-hidden ring-2 ring-primary transition-all;
+  }
+
+  button {
+    @apply bg-primary text-white font-bold py-2 px-4 rounded-md transition-all;
+  }
+
+  button:not(:disabled, .remove) {
+    @apply hover:brightness-90;
+  }
+
+  button:disabled {
+    @apply bg-slate-600 text-slate-500 cursor-not-allowed;
+  }
+
+  button.icon {
+    @apply p-3 aspect-square h-fit;
+  }
+
+  button:focus {
+    @apply ring-offset-2 ring-offset-slate-700;
+  }
+
+  input {
+    @apply appearance-none border border-slate-700 rounded-md w-full py-2 px-3 bg-slate-800 text-gray-200 leading-tight;
+  }
 }
 
-h1 {
-  @apply text-7xl;
-  font-family: 'Teko', sans-serif;
-}
-
-:focus-visible {
-  @apply outline-none ring-2 ring-primary transition-all;
-}
-
-button {
-  @apply bg-primary text-white font-bold py-2 px-4 rounded-md transition-all;
-}
-
-button:not(:disabled, .remove) {
-  @apply hover:brightness-90;
-}
-
-button:disabled {
-  @apply bg-slate-600 text-slate-500 cursor-not-allowed;
-}
-
-button.icon {
-  @apply p-3 aspect-square h-fit;
-}
-
-button:focus {
-  @apply ring-offset-2 ring-offset-slate-700;
-}
-
-input {
-  @apply appearance-none border border-slate-700 rounded-md w-full py-2 px-3 bg-slate-800 text-gray-200 leading-tight;
-}
-
-.text-shadow {
+@utility text-shadow {
   text-shadow: 0 0 6px #1e293b;
 }

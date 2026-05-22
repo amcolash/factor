@@ -92,7 +92,7 @@ export function TokenList({
         {userData.keys?.length === 0 ? (
           <div className="text-center text-lg bg-slate-800 p-8 w-full rounded-md">No keys added yet</div>
         ) : (
-          <div className="w-full max-w-screen-lg">
+          <div className="w-full max-w-(--breakpoint-lg)">
             <div className="flex gap-4 sm:gap-6 items-center mb-10">
               <button onClick={lock} className="p-0 bg-transparent" title="Lock">
                 <img src={logo} className="h-10 aspect-square object-contain -mb-0.5" />
@@ -100,7 +100,7 @@ export function TokenList({
 
               <div className="relative w-full">
                 <input
-                  className="pl-10 bg-slate-700 bg-opacity-20 hover:bg-slate-600 hover:bg-opacity-30 focus-within:bg-slate-600 focus-within:bg-opacity-30 shadow-centered transition-all"
+                  className="pl-10 bg-slate-700/20 hover:bg-slate-600/30 focus-within:bg-slate-600/30 shadow-centered transition-all"
                   type="search"
                   value={search}
                   placeholder="Search tokens"
@@ -108,7 +108,7 @@ export function TokenList({
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
                 />
-                <FaSearch className="fill-slate-400 absolute left-3 top-[11px] h-4" />
+                <FaSearch className="fill-slate-400 absolute left-3 top-2.75 h-4" />
               </div>
             </div>
 
@@ -116,7 +116,7 @@ export function TokenList({
               <div
                 className={twMerge(
                   'grid gap-4 sm:gap-6 mb-4 sm:mb-6 transition-all',
-                  searchFocused && 'opacity-50 blur-sm'
+                  searchFocused && 'opacity-50 blur-xs'
                 )}
               >
                 <h2 className="m-0 text-xl leading-none">Recently Used</h2>
@@ -142,7 +142,7 @@ export function TokenList({
               </div>
             )}
 
-            <div className={twMerge(gridClass, searchFocused && search.length === 0 && 'opacity-50 blur-sm')}>
+            <div className={twMerge(gridClass, searchFocused && search.length === 0 && 'opacity-50 blur-xs')}>
               {userData.keys
                 .filter(
                   (k) => (search.length === 0 || k.name.toLowerCase().includes(search.toLowerCase())) && !k.archived

@@ -31,7 +31,7 @@ export function WebauthnEnroll({ userRef, encryptedCode }: { userRef: DocumentRe
       toast.success('Successfully enrolled biometric login');
     } catch (err) {
       console.error(err);
-      toast.error('Error registering fingerprint');
+      toast.error('Error registering biometric login');
     }
   };
 
